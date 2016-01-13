@@ -14,11 +14,11 @@ class SalesAnalyst
   def average_items_per_merchant
     num_merchants = total_number_of_merchants
     sum = total_items_from_all_merchants
-    sum/num_merchants.to_f
+    (sum/num_merchants.to_f).round(2)
   end
 
   def average_items_per_merchant_standard_deviation
-    Math.sqrt(items_variance)
+    Math.sqrt(items_variance).round(2)
   end
 
   def total_number_of_merchants
@@ -36,7 +36,7 @@ class SalesAnalyst
   def items_variance
     m = average_items_per_merchant
     sum = se.merchants.all.inject(0){|accum, merchant| accum + (merchant.items.length-m)**2 }
-    sum/(se.merchants.all.length).to_f
+    sum/((se.merchants.all.length-1).to_f)
   end
 
   def average_item_price_for_merchant(merchant_id)
@@ -45,17 +45,19 @@ class SalesAnalyst
     sum = items.reduce(0) do |total, item|
       total + item.unit_price
     end
-    sum/items.length.to_f
+    (sum/items.length.to_f).round(2)
   end
 
   def average_price_per_merchant
-    total_merch =total_number_of_merchants
+    total_merch = total_number_of_merchants
     merchants = se.merchants.all
-    items =  merchants.flat_map {|merchant| merchant.items}
-    total_items_price = items.reduce(0) do |total, item|
-      total + item.unit_price
+    #for each merchant, calculate the average price on its own inventory
+    # add that average to sum
+    avg_prices_sum = merchants.reduce(0) do |sum, merchant|
+      sum + average_item_price_for_merchant(merchant.id)
     end
-    total_items_price/total_merch
+    # return sum/totalnumber of merchants
+    avg_prices_sum/total_merch.to_f
   end
 
   def total_number_of_merchants
