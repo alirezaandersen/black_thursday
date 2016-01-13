@@ -58,7 +58,13 @@ class SalesAnalyst
     total_items_price/total_merch
   end
 
-  #item price per merchant / merchant items.length
+  def total_number_of_merchants
+    se.merchants.all.length
+  end
+
+  def average_price_per_merchant2
+    average_price_per_merchant/total_number_of_merchants
+  end
 
   def prices_variance
     m = average_price_per_merchant

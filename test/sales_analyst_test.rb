@@ -56,5 +56,14 @@ class SalesAnalystTest < Minitest::Test
     assert gold_items.all? {|item| item.unit_price > 659851.0}
   end
 
+  def test_average_price_per_merchant2
+    se = SalesEngine.from_csv({:items =>
+                  "./data/items.csv",
+                  :merchants => "./data/merchants.csv"})
+    sa = SalesAnalyst.new(se)
+    assert_equal 152,
+    sa.average_price_per_merchant2.to_f.round(0)
+  end
+
 
 end
