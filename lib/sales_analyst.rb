@@ -8,7 +8,7 @@ class SalesAnalyst
   end
 
   def sales_engine
-    @se
+    se
   end
 
   def average_items_per_merchant
