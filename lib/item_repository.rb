@@ -47,7 +47,7 @@ class ItemRepository
 
   def find_all_by_price_in_range(range)
     items.find_all do |item|
-      item.unit_price > range.min && item.unit_price < range.max
+      item.unit_price >= range.min && item.unit_price <= range.max
     end
   end
 
@@ -59,6 +59,10 @@ class ItemRepository
 
   def all
     items
+  end
+
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
   end
 
 
