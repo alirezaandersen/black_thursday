@@ -43,20 +43,12 @@ class ItemRepositoryTest <  Minitest::Test
   end
 
   def test_can_find_all_by_description
-    skip
     ir = ItemRepository.new
     ir.load_data("./data/items.csv")
-    description = "Acrylique sur toile exécutée en 2004
-    Format : 50 x 60 cm
-    Toile sur châssis en bois - non encadré
-    Artiste : Flavien Couche - Artiste côté Akoun
-
-    TABLEAU VENDU AVEC FACTURE ET CERTIFICAT D&#39;AUTHETICITE
-
-    www.flavien-couche.com"
-    item = ir.find_by_description(description)
+    description = "Acrylique sur toile exécutée en 2011\nFormat : 46 x 55 cm\nToile sur châssis en bois - non encadré\nArtiste : Flavien Couche - Artiste côté Akoun\n\nTABLEAU VENDU AVEC FACTURE ET CERTIFICAT D&#39;AUTHETICITE\n\nwww.flavien-couche.com"
+    item = ir.find_all_with_description(description)
     assert_equal description, item[0].description
-    assert_equal 263398427, item[0].id
+    assert_equal 263396255, item[0].id
   end
 
   def test_find_all_by_price
