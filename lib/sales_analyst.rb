@@ -51,12 +51,14 @@ class SalesAnalyst
   def average_price_per_merchant
     total_merch =total_number_of_merchants
     merchants = se.merchants.all
-    items =  merchants.map {|merchant| merchant.items}.flatten
+    items =  merchants.flat_map {|merchant| merchant.items}
     total_items_price = items.reduce(0) do |total, item|
       total + item.unit_price
     end
     total_items_price/total_merch
   end
+
+  #item price per merchant / merchant items.length
 
   def prices_variance
     m = average_price_per_merchant
@@ -67,18 +69,13 @@ class SalesAnalyst
   def prices_std_deviation
     Math.sqrt(prices_variance)
   end
-  def golden_items
-    #sudo
 
-    #find golden items: unit_price > average + 2*std_deviations
+  def golden_items
     average = average_price_per_merchant
     std_dev = prices_std_deviation
     threshold = average + std_dev * 2
     items = se.items.all
     items.select {|item| item.unit_price > threshold}
-
-    # go through each item, compare its unit_price to the threshold, and if it's greater than store it
-
   end
 
 end
