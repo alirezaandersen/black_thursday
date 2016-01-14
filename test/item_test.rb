@@ -94,6 +94,4 @@ class ItemTest < Minitest::Test
 
         assert_equal 22145687, i.merchant_id
     end
-
-
 end

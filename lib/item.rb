@@ -10,8 +10,8 @@ class Item
     @unit_price = args[:unit_price]
     @created_at = args[:created_at]
     @updated_at = args[:updated_at]
-    @merchant_id = args[:merchant_id].to_i
-    @id = args[:id].to_i
+    @merchant_id = args[:merchant_id]
+    @id = args[:id]
   end
 
   def set_merchant(merchant)
