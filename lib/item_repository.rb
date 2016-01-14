@@ -58,7 +58,7 @@ class ItemRepository
   end
 
   def all
-    items
+    @items
   end
 
   def inspect
