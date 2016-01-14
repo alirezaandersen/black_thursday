@@ -27,7 +27,7 @@ class InoviceTest < Minitest::Test
     :created_at  => @some_time,
     :updated_at  => @some_time,
     })
-    assert_equal 6,  inv.id
+    assert_equal 6, inv.id
   end
 
   def test_invoice_returns_the_customer_id
@@ -39,7 +39,7 @@ class InoviceTest < Minitest::Test
     :created_at  => @some_time,
     :updated_at  => @some_time,
     })
-    assert_equal 18,  inv.customer_id
+    assert_equal 18, inv.customer_id
   end
 
   def test_invoice_returns_the_merchant_id
@@ -51,7 +51,7 @@ class InoviceTest < Minitest::Test
     :created_at  => @some_time,
     :updated_at  => @some_time,
     })
-    assert_equal 8888123,  inv.merchant_id
+    assert_equal 8888123, inv.merchant_id
   end
 
   def test_invoice_will_return_a_created_at_time
