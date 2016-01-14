@@ -8,6 +8,22 @@ class SalesEngineTest < Minitest::Test
     assert_kind_of MerchantRepository, se.merchants
   end
 
+  def test_can_load_from_data
+    i1 = Item.new({:name => "Best item",
+      :description => "No explanation needed",
+      :unit_price => BigDecimal.new(99.73, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 23457,
+      :id => 13})
+    m1 = Merchant.new({:name => "Ali's glitter taphouse",
+      :id => 356})
+    se = SalesEngine.from_data({:items => [i1],
+      :merchants => [m1]})
+    assert_equal [m1], se.merchants.all
+    assert_equal [i1], se.items.all
+  end
+
   def test_loads_all_items
     se = SalesEngine.from_csv({:items => "./data/items.csv",
                   :merchants => "./data/merchants.csv"})

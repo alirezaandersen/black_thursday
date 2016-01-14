@@ -17,6 +17,15 @@ class SalesEngine
     se
   end
 
+  def self.from_data(args)
+    se = SalesEngine.new
+    se.items.load_items(args[:items])
+    se.merchants.load_merchants(args[:merchants])
+    se.send_items_to_each_merchant
+    se.send_merchant_to_all_items
+    se
+  end
+
   def send_items_to_each_merchant
     merchants.all.each do |merchant|
       merchandise = items.find_all_by_merchant_id(merchant.id)
