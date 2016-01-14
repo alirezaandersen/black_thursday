@@ -3,14 +3,19 @@ require 'item'
 require 'bigdecimal'
 
 class ItemTest < Minitest::Test
-
+  attr_reader :c_time, :u_time
+  def setup
+    @c_time = Time.new(2016, 01, 04, 11, 27, 39, "-07:00")
+    @u_time = Time.new(2016, 01, 25, 05, 12, 50, "-07:00")
+  end
 
   def test_returns_the_name_of_an_item
+
     i = Item.new({ :name => "Pencil",
       :description => "You can use it to write things",
       :unit_price => BigDecimal.new(10.99,4),
-      :created_at => "2016-01-13 14:12:50 -0700",
-      :updated_at => "2016-01-13 14:12:50 -0700",
+      :created_at => c_time,
+      :updated_at => u_time,
       :id => 932113,
       :merchant_id => 22145687})
 
@@ -21,8 +26,8 @@ class ItemTest < Minitest::Test
     i = Item.new({ :name => "Pencil",
       :description => "You can use it to write things",
       :unit_price => BigDecimal.new(10.99,4),
-      :created_at => "2016-01-13 14:12:50 -0700",
-      :updated_at => "2016-01-13 14:12:50 -0700",
+      :created_at => c_time,
+      :updated_at => u_time,
       :id => 932113,
       :merchant_id => 22145687})
 
@@ -33,20 +38,21 @@ class ItemTest < Minitest::Test
       i = Item.new({ :name => "Pencil",
         :description => "You can use it to write things",
         :unit_price => BigDecimal.new(10.99,4),
-        :created_at => "2016-01-13 14:12:50 -0700",
-        :updated_at => "2016-01-13 14:12:50 -0700",
+        :created_at => c_time,
+        :updated_at => u_time,
         :id => 932113,
         :merchant_id => 22145687})
 
         assert_equal 10.99, i.unit_price
+        assert_kind_of BigDecimal, i.unit_price
     end
 
     def test_return_item_created_time
       i = Item.new({ :name => "Pencil",
         :description => "You can use it to write things",
         :unit_price => BigDecimal.new(10.99,4),
-        :created_at => "2016-01-13 14:12:50 -0700",
-        :updated_at => "2016-01-13 14:12:50 -0700",
+        :created_at => c_time,
+        :updated_at => u_time,
         :id => 932113,
         :merchant_id => 22145687})
 
@@ -57,8 +63,8 @@ class ItemTest < Minitest::Test
       i = Item.new({ :name => "Pencil",
         :description => "You can use it to write things",
         :unit_price => BigDecimal.new(10.99,4),
-        :created_at => "2016-01-13 14:12:50 -0700",
-        :updated_at => "2016-01-13 14:12:50 -0700",
+        :created_at => c_time,
+        :updated_at => u_time,
         :id => 932113,
         :merchant_id => 22145687})
 
@@ -69,8 +75,8 @@ class ItemTest < Minitest::Test
       i = Item.new({ :name => "Pencil",
         :description => "You can use it to write things",
         :unit_price => BigDecimal.new(10.99,4),
-        :created_at => "2016-01-13 14:12:50 -0700",
-        :updated_at => "2016-01-13 14:12:50 -0700",
+        :created_at => c_time,
+        :updated_at => u_time,
         :id => 932113,
         :merchant_id => 22145687})
 
@@ -81,8 +87,8 @@ class ItemTest < Minitest::Test
       i = Item.new({ :name => "Pencil",
         :description => "You can use it to write things",
         :unit_price => BigDecimal.new(10.99,4),
-        :created_at => "2016-01-13 14:12:50 -0700",
-        :updated_at => "2016-01-13 14:12:50 -0700",
+        :created_at => c_time,
+        :updated_at => u_time,
         :id => 932113,
         :merchant_id => 22145687})
 
