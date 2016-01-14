@@ -276,6 +276,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_average_price_per_merchant
+    skip
     se = SalesEngine.from_csv({:items =>
                   "./data/items.csv",
                   :merchants => "./data/merchants.csv"})
