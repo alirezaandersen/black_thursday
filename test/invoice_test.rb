@@ -65,6 +65,7 @@ class InoviceTest < Minitest::Test
     :updated_at  => @some_time,
     })
     assert_equal @some_time, inv.created_at
+    assert_kind_of Time, inv.created_at
   end
 
   def test_invoice_will_return_a_updated_at_time
@@ -77,5 +78,6 @@ class InoviceTest < Minitest::Test
     :updated_at  => @some_time,
     })
     assert_equal @some_time, inv.updated_at
+    assert_kind_of Time, inv.created_at
   end
 end
