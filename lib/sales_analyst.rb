@@ -60,27 +60,20 @@ class SalesAnalyst
     #ensemble
     total_merch = total_number_of_merchants
     merchants = se.merchants.all
-    #for each merchant, calculate the average price on its own inventory
-    # add that average to sum
     avg_prices_sum = merchants.reduce(0) do |sum, merchant|
       sum + average_item_price_for_merchant(merchant.id)
     end
-    # return sum/totalnumber of merchants
-    avg_prices_sum/total_merch.to_f
+    (avg_prices_sum/total_merch.to_f).round(2)
   end
 
   def total_number_of_merchants
     se.merchants.all.length
   end
 
-  def average_price_per_merchant2
-    average_price_per_merchant/total_number_of_merchants
-  end
-
   def prices_variance
     m = average_price_per_merchant
     sum = se.items.all.inject(0){|accum, item| accum + (item.unit_price-m)**2 }
-    sum/(se.items.all.length).to_f
+    sum/(se.items.all.length-1).to_f
   end
 
   def prices_std_deviation

@@ -1,5 +1,6 @@
 require_relative 'item'
 require 'time'
+require 'bigdecimal'
 class ItemRepository
 
   attr_reader :items
