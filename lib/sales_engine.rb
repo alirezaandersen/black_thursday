@@ -1,5 +1,6 @@
 require_relative 'item_repository'
 require_relative 'merchant_repository'
+
 class SalesEngine
   attr_reader :items, :merchants
   def initialize
@@ -16,7 +17,7 @@ class SalesEngine
     se
   end
 
-  def send_items_to_each_merchant 
+  def send_items_to_each_merchant
     merchants.all.each do |merchant|
       merchandise = items.find_all_by_merchant_id(merchant.id)
       merchant.set_items(merchandise)

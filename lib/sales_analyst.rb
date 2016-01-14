@@ -35,7 +35,9 @@ class SalesAnalyst
 
   def items_variance
     m = average_items_per_merchant
-    sum = se.merchants.all.inject(0){|accum, merchant| accum + (merchant.items.length-m)**2 }
+    sum = se.merchants.all.reduce(0) do |accum, merchant|
+      accum + (merchant.items.length-m)**2
+    end
     sum/((se.merchants.all.length-1).to_f)
   end
 

@@ -11,5 +11,4 @@ class Merchant
     @items = items
   end
 
-
 end
