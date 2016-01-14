@@ -22,6 +22,12 @@ class ItemRepository
       end
   end
 
+  def load_items(items_in)
+    items_in.each do |item|
+      items << item
+    end
+  end
+
   def find_by_id(id_number)
     items.find do |item|
       item.id == id_number
