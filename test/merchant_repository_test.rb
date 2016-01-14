@@ -1,8 +1,33 @@
 require 'test_helper'
 require 'merchant_repository'
 
+class SmallMerchantRepositoryTest < Minitest::Test
+  def test_by_default_has_no_items
+    mr = MerchantRepository.new
+    assert_equal 0, mr.all.length
+  end
 
-class MerchantRepositoryTest < Minitest::Test
+  def test_can_load_a_single_item
+    mr = MerchantRepository.new
+    mr.load_merchants([Merchant.new({:name => "Ali's glitter taphouse",
+      :id => 356})])
+    assert_equal 1, mr.all.length
+    assert_equal "Ali's glitter taphouse", mr.all[0].name
+  end
+
+  def test_all_returns_multiple_items
+    mr = MerchantRepository.new
+    mr.load_merchants([Merchant.new({:name => "Ali's glitter taphouse",
+      :id => 356}), Merchant.new({:name => "Erinna's dog spoiling services", :id => 763}), Merchant.new({:name => "Horacio's Pizzicatos", :id => 80})])
+    assert_equal 3, mr.all.length
+    assert_equal "Erinna's dog spoiling services", mr.all[1].name
+    assert_equal 80, mr.all[2].id
+  end
+  
+end
+
+
+class FromFileMerchantRepositoryTest < Minitest::Test
 
   def test_loads_data
     mr = MerchantRepository.new

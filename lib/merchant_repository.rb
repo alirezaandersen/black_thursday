@@ -15,6 +15,12 @@ class MerchantRepository
     end
   end
 
+  def load_merchants(merchants_in)
+    merchants_in.each do |merchant|
+      merchants << merchant
+    end
+  end
+
   def find_by_id(id)
     merchants.find do |merchant|
       merchant.id == id
