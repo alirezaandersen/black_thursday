@@ -7,11 +7,8 @@ class Invoice
     @customer_id = args[:customer_id]
     @merchant_id = args[:merchant_id]
     @status = args[:status]
-    @created_at = Time.now(args[:created_at])
-    @updated_at =Time.now( args[:created_at])
+    @created_at = args[:created_at]
+    @updated_at = args[:created_at]
   end
-
-
-
 
 end
