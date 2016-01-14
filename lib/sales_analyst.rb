@@ -1,4 +1,3 @@
-#require 'math'
 class SalesAnalyst
 
   attr_reader :se
@@ -19,6 +18,12 @@ class SalesAnalyst
 
   def average_items_per_merchant_standard_deviation
     Math.sqrt(items_variance).round(2)
+  end
+
+  def merchants_with_low_item_count
+    se.merchants.all.find_all do |merchant|
+      merchant.items.length < average_items_per_merchant - average_items_per_merchant_standard_deviation
+    end
   end
 
   def total_number_of_merchants
@@ -42,6 +47,7 @@ class SalesAnalyst
   end
 
   def average_item_price_for_merchant(merchant_id)
+    # individual merchant
     merchant = se.merchants.find_by_id(merchant_id)
     items = merchant.items
     sum = items.reduce(0) do |total, item|
@@ -51,6 +57,7 @@ class SalesAnalyst
   end
 
   def average_price_per_merchant
+    #ensemble
     total_merch = total_number_of_merchants
     merchants = se.merchants.all
     #for each merchant, calculate the average price on its own inventory
