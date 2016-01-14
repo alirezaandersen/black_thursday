@@ -1,4 +1,5 @@
 require_relative 'item'
+require 'time'
 class ItemRepository
 
   attr_reader :items
@@ -11,13 +12,13 @@ class ItemRepository
     data = CSV.open filename, headers: true, header_converters: :symbol
 
     data.each do |row|
-      items << Item.new({ :name => row[:name],
-        :description => row[:description],
-        :unit_price => row[:unit_price],
-        :created_at => row[:created_at],
-        :updated_at => row[:updated_at],
-        :merchant_id => row[:merchant_id],
-        :id => row[:id]})
+      items << Item.new({:name => row[:name].to_s,
+        :description => row[:description].to_s,
+        :unit_price => BigDecimal.new(row[:unit_price]),
+        :created_at => Time.parse(row[:created_at]),
+        :updated_at => Time.parse(row[:updated_at]),
+        :merchant_id => row[:merchant_id].to_i,
+        :id => row[:id].to_i})
       end
   end
 
@@ -41,7 +42,7 @@ class ItemRepository
 
   def find_all_by_price(price)
     items.find_all do |item|
-      item.unit_price == BigDecimal.new(price, 4)
+      item.unit_price == BigDecimal.new(price)
     end
   end
 
@@ -58,7 +59,7 @@ class ItemRepository
   end
 
   def all
-    @items
+    items
   end
 
   def inspect
