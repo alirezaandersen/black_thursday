@@ -64,7 +64,7 @@ class ItemRepositoryTest <  Minitest::Test
     ir.load_data("./data/items.csv")
     range = Range.new(13,150)
     items = ir.find_all_by_price_in_range(range)
-    assert_equal 6, items.length
+    assert_equal 7, items.length
   end
 
   def test_find_all_by_merchant_ids
