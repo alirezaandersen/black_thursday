@@ -1,5 +1,6 @@
 require_relative 'item_repository'
 require_relative 'merchant_repository'
+require_relative 'invoice_repository'
 
 class SalesEngine
   attr_reader :items, :merchants, :invoices
@@ -29,7 +30,7 @@ class SalesEngine
     se = SalesEngine.new
     se.items.load_items(args[:items]) if args[:items]
     se.merchants.load_merchants(args[:merchants]) if args[:merchants]
-    se.invoices.load_data(args[:invoices]) if args[:invoices]
+    se.invoices.load_invoices(args[:invoices]) if args[:invoices]
     if args[:items] && args[:merchants]
       se.send_items_to_each_merchant
       se.send_merchant_to_all_items

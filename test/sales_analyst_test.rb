@@ -70,9 +70,9 @@ class InternSalesAnalyst < Minitest::Test
     m5 = Merchant.new({:name => "M5", :id => 250})
     m1.stubs(:items).returns([1])
     m2.stubs(:items).returns([1])
-    m3.stubs(:items).returns([1,1,1,1,1])
-    m4.stubs(:items).returns([1,1,1,1,1,1])
-    m5.stubs(:items).returns([1,1,1,1,1,1,1])
+    m3.stubs(:items).returns([1]*5)
+    m4.stubs(:items).returns([1]*6)
+    m5.stubs(:items).returns([1]*7)
     args = {items: [], merchants: [m1,m2,m3,m4,m5]}
     se_temp = SalesEngine.from_data(args)
     sa = SalesAnalyst.new(se_temp)

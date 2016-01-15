@@ -88,6 +88,38 @@ class SalesAnalyst
     items.select {|item| item.unit_price > threshold}
   end
 
-  
+  def average_invoices_per_merchant
+      merchants = se.merchants.all
+    sum = merchants.reduce(0) do |total, merchant|
+      total + merchant.invoices.count
+    end
+    (sum/merchants.length.to_f).round(2)
+  end
 
+  def average_invoices_per_merchant_standard_deviation
+      m = average_invoices_per_merchant
+      sum = 0
+      merchants.each do |merchant|
+        sum += (merchant.invoices.length - m)**2
+      end
+      sum/(merchants.length - 1)
+    Math.sqrt(sum/(merchants.length - 1)).round(2)
+  end
+
+  def top_merchants_by_invoice_count
+    merchants.find_all do |merchant|
+      merchant.invoices.length > average_invoices_per_merchant + 2 * average_invoices_per_merchant_standard_deviation
+    end
+  end
+
+  def bottom_merchants_by_invoice_count
+    merchants.find_all do |merchant|
+      merchant.invoices.length < average_invoices_per_merchant - 2 * average_invoices_per_merchant_standard_deviation
+    end
+  end
+
+
+  def merchants
+    se.merchants.all
+  end
 end
