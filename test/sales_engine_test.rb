@@ -52,4 +52,28 @@ class SalesEngineTest < Minitest::Test
     assert_equal 263397201, item.id
   end
 
+  def test_can_load_all_invoices
+    se= SalesEngine.from_csv({:items => "./data/items.csv",
+                  :merchants => "./data/merchants.csv",
+                  :invoices =>"./data/invoices.csv"})
+    assert_equal 4985, se.invoices.all.length
+  end
+
+  def test_invoices_knows_their_merchants
+    se= SalesEngine.from_csv({:items => "./data/items.csv",
+                  :merchants => "./data/merchants.csv",
+                  :invoices =>"./data/invoices.csv"})
+    assert_equal "babypantry",se.invoices.all[43].merchant.name
+    assert_equal "enchantmentproduct",se.invoices.all[117].merchant.name
+  end
+
+  def test_merchants_know_their_invoices
+    se= SalesEngine.from_csv({:items => "./data/items.csv",
+                  :merchants => "./data/merchants.csv",
+                  :invoices =>"./data/invoices.csv"})
+    merchant = se.merchants.find_by_id(12336165)
+    assert_equal 6, merchant.invoices.length
+    assert merchant.invoices.all? {|invoice| invoice.merchant.name == "PackingMonkey"}
+  end
+  
 end

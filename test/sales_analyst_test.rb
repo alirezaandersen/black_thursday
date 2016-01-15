@@ -240,7 +240,6 @@ class InternSalesAnalyst < Minitest::Test
 
 end
 
-
 class SalesAnalystTest < Minitest::Test
 
   def test_Analyst_has_a_SalesEngine
@@ -295,7 +294,5 @@ class SalesAnalystTest < Minitest::Test
     assert_equal "Solid American Black Walnut Trestle Table", gold_items[4].name
     assert gold_items.all? {|item| item.unit_price > 659851.0}
   end
-
-
 
 end
