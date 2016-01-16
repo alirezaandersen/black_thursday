@@ -133,7 +133,7 @@ class SalesAnalyst
     invoice_days = invoices.map {|invoice| Date::DAYNAMES[invoice.created_at.wday]}
 
     weekday_count = []
-    (0..7).each do |i|
+    (0..6).each do |i|
       weekday_count[i] = invoice_days.select {|day| day == Date::DAYNAMES[i]}.length
     end
 
@@ -142,17 +142,16 @@ class SalesAnalyst
       accum + (wdcount-mean_invoices_per_day)**2
     end
     std_dev = Math.sqrt(sum/6.0)
-
     top_days = []
     weekday_count.each_with_index do |wdcount,i|
-      top_days << Date::DAYNAMES[i] if wdcount > mean_invoices_per_day +std_dev
+      top_days << Date::DAYNAMES[i] if wdcount > (mean_invoices_per_day +std_dev)
     end
-    top_days
+
+    top_days.map {|top_day| top_day.to_sym}
 
   end
 
   def invoice_status(status)
-    status = status.to_s
     invs = se.invoices.find_all_by_status(status)
     ((invs.length.to_f)/(invoices.length)*100).round(2)
   end
