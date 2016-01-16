@@ -1,4 +1,5 @@
 require 'csv'
+require_relative 'invoice'
 class InvoiceRepository
 
   attr_reader :invoices
@@ -45,5 +46,9 @@ class InvoiceRepository
 
   def all
     invoices
+  end
+
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
   end
 end

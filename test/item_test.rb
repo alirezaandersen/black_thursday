@@ -94,4 +94,15 @@ class ItemTest < Minitest::Test
 
         assert_equal 22145687, i.merchant_id
     end
+
+    def test_unit_price_to_dollars
+      i = Item.new({ :name => "Pencil",
+      :description => "You can use it to write things",
+      :unit_price => BigDecimal.new(1400,4),
+      :created_at => c_time,
+      :updated_at => u_time,
+      :id => 932113,
+      :merchant_id => 22145687})
+      assert_equal 14.00, i.unit_price_to_dollars
+    end
 end

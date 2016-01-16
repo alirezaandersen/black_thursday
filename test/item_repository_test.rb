@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'item_repository'
+require 'csv'
 
 class SmallItemRepositoryTest < Minitest::Test
   def test_by_default_has_no_items
@@ -129,7 +130,7 @@ class LargeItemRepositoryTest <  Minitest::Test
   def test_find_all_by_price
     ir = ItemRepository.new
     ir.load_data("./data/items.csv")
-    items = ir.find_all_by_price(4800)
+    items = ir.find_all_by_price(48.00)
     assert_equal 4800, items[0].unit_price
     assert_equal 7, items.length
   end
@@ -137,7 +138,7 @@ class LargeItemRepositoryTest <  Minitest::Test
   def test_find_all_by_price_in_range
     ir = ItemRepository.new
     ir.load_data("./data/items.csv")
-    range = Range.new(13,150)
+    range = Range.new(0.13,1.50)
     items = ir.find_all_by_price_in_range(range)
     assert_equal 7, items.length
   end
