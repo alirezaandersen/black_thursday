@@ -11,14 +11,14 @@ class InternSalesAnalyst < Minitest::Test
     m2 = Merchant.new({:name => "Erinna's dog spoiling services", :id => 743})
     i1 = Item.new({:name => "Rainbow blonde glitter ale",
       :description => "No explanation needed",
-      :unit_price => BigDecimal.new(4.00, 4),
+      :unit_price => BigDecimal.new(400, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 356,
       :id => 101})
     i2 = Item.new({:name => "Stripper glitter stout",
       :description => "Hearty and sparkley ABV 13.6\%",
-      :unit_price => BigDecimal.new(7.50, 4),
+      :unit_price => BigDecimal.new(750, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 356,
@@ -26,28 +26,28 @@ class InternSalesAnalyst < Minitest::Test
 
     i3 = Item.new({:name => "Glitter tail braids",
       :description => "For those flashy occasions",
-      :unit_price => BigDecimal.new(23.00, 4),
+      :unit_price => BigDecimal.new(2300, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 201})
     i4 = Item.new({:name => "Diamond manicure",
       :description => "Be dazzling your paws",
-      :unit_price => BigDecimal.new(15.50, 4),
+      :unit_price => BigDecimal.new(1550, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 202})
     i5 = Item.new({:name => "KimmyKs glitter collar",
       :description => "Channel your inner Kardashian",
-      :unit_price => BigDecimal.new(9.95, 4),
+      :unit_price => BigDecimal.new(995, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 203})
     i6 = Item.new({:name => "Sparkle cologne",
       :description => "Attract those bitches",
-      :unit_price => BigDecimal.new(19.95, 4),
+      :unit_price => BigDecimal.new(1995, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
@@ -106,14 +106,14 @@ class InternSalesAnalyst < Minitest::Test
       :id => 356})
     i1 = Item.new({:name => "Rainbow blonde glitter ale",
       :description => "No explanation needed",
-      :unit_price => BigDecimal.new(4.00, 4),
+      :unit_price => BigDecimal.new(400, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 356,
       :id => 101})
     i2 = Item.new({:name => "Stripper glitter stout",
       :description => "Hearty and sparkley ABV 13.6\%",
-      :unit_price => BigDecimal.new(7.50, 4),
+      :unit_price => BigDecimal.new(750, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 356,
@@ -131,14 +131,14 @@ class InternSalesAnalyst < Minitest::Test
     m2 = Merchant.new({:name => "Erinna's dog spoiling services", :id => 743})
     i1 = Item.new({:name => "Rainbow blonde glitter ale",
       :description => "No explanation needed",
-      :unit_price => BigDecimal.new(4.00, 4),
+      :unit_price => BigDecimal.new(400, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 356,
       :id => 101})
     i2 = Item.new({:name => "Stripper glitter stout",
       :description => "Hearty and sparkley ABV 13.6\%",
-      :unit_price => BigDecimal.new(7.50, 4),
+      :unit_price => BigDecimal.new(750, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 356,
@@ -146,28 +146,28 @@ class InternSalesAnalyst < Minitest::Test
 
     i3 = Item.new({:name => "Glitter tail braids",
       :description => "For those flashy occasions",
-      :unit_price => BigDecimal.new(23.00, 4),
+      :unit_price => BigDecimal.new(2300, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 201})
     i4 = Item.new({:name => "Diamond manicure",
       :description => "Be dazzling your paws",
-      :unit_price => BigDecimal.new(15.50, 4),
+      :unit_price => BigDecimal.new(1550, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 202})
     i5 = Item.new({:name => "KimmyKs glitter collar",
       :description => "Channel your inner Kardashian",
-      :unit_price => BigDecimal.new(9.95, 4),
+      :unit_price => BigDecimal.new(995, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 203})
     i6 = Item.new({:name => "Sparkle cologne",
       :description => "Attract those bitches",
-      :unit_price => BigDecimal.new(19.95, 4),
+      :unit_price => BigDecimal.new(1995, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
@@ -178,7 +178,7 @@ class InternSalesAnalyst < Minitest::Test
 
     assert_equal 5.75, sa.average_item_price_for_merchant(356)
     assert_equal 17.10, sa.average_item_price_for_merchant(743)
-    assert_equal 11.43, sa.average_price_per_merchant
+    assert_equal 11.43, sa.average_average_price_per_merchant
   end
 
   def test_can_get_the_golden_items
@@ -187,14 +187,14 @@ class InternSalesAnalyst < Minitest::Test
     m2 = Merchant.new({:name => "Erinna's dog spoiling services", :id => 743})
     i1 = Item.new({:name => "Rainbow blonde glitter ale",
       :description => "No explanation needed",
-      :unit_price => BigDecimal.new(5.50, 4),
+      :unit_price => BigDecimal.new(550, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 356,
       :id => 101})
     i2 = Item.new({:name => "Stripper glitter stout",
       :description => "Hearty and sparkley ABV 13.6\%",
-      :unit_price => BigDecimal.new(9.50, 4),
+      :unit_price => BigDecimal.new(950, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 356,
@@ -202,28 +202,28 @@ class InternSalesAnalyst < Minitest::Test
 
     i3 = Item.new({:name => "Glitter tail braids",
       :description => "For those flashy occasions",
-      :unit_price => BigDecimal.new(19.00, 4),
+      :unit_price => BigDecimal.new(1900, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 201})
     i4 = Item.new({:name => "Platinum Diamond (0.25C) pawdicure",
       :description => "Be dazzling your paws",
-      :unit_price => BigDecimal.new(43.00, 4),
+      :unit_price => BigDecimal.new(4300, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 202})
     i5 = Item.new({:name => "KimmyKs glitter collar",
       :description => "Channel your inner Kardashian",
-      :unit_price => BigDecimal.new(15.50, 4),
+      :unit_price => BigDecimal.new(1550, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
       :id => 203})
     i6 = Item.new({:name => "Sparkle cologne",
       :description => "Attract those bitches",
-      :unit_price => BigDecimal.new(16.00, 4),
+      :unit_price => BigDecimal.new(1600, 4),
       :created_at => Time.new,
       :updated_at => Time.now,
       :merchant_id => 743,
@@ -234,7 +234,7 @@ class InternSalesAnalyst < Minitest::Test
 
     assert_equal 7.50, sa.average_item_price_for_merchant(356)
     assert_equal 23.38, sa.average_item_price_for_merchant(743)
-    assert_equal 15.44, sa.average_price_per_merchant
+    assert_equal 15.44, sa.average_average_price_per_merchant
     assert_equal [i4], sa.golden_items
   end
 
@@ -271,7 +271,7 @@ class SalesAnalystTest < Minitest::Test
                   "./data/items.csv",
                   :merchants => "./data/merchants.csv"})
     sa = SalesAnalyst.new(se)
-    assert_equal 1665.67, sa.average_item_price_for_merchant(12334105)
+    assert_equal 16.66, sa.average_item_price_for_merchant(12334105)
   end
 
   def test_average_price_per_merchant

@@ -26,6 +26,12 @@ class SalesAnalyst
     end
   end
 
+  def merchants_with_high_item_count
+    se.merchants.all.find_all do |merchant|
+      merchant.items.length > average_items_per_merchant + average_items_per_merchant_standard_deviation
+    end
+  end
+
   def total_number_of_merchants
     se.merchants.all.length
   end
@@ -50,20 +56,21 @@ class SalesAnalyst
     # individual merchant
     merchant = se.merchants.find_by_id(merchant_id)
     items = merchant.items
+    return 0 if items.length == 0
     sum = items.reduce(0) do |total, item|
-      total + item.unit_price
+      total + item.unit_price unless item.nil?
     end
-    (sum/items.length.to_f).round(2)
+    (sum/100.0/items.length).round(2)
   end
 
-  def average_price_per_merchant
+  def average_average_price_per_merchant
     #ensemble
     total_merch = total_number_of_merchants
     merchants = se.merchants.all
     avg_prices_sum = merchants.reduce(0) do |sum, merchant|
       sum + average_item_price_for_merchant(merchant.id)
     end
-    (avg_prices_sum/total_merch.to_f).round(2)
+    (avg_prices_sum/total_merch).round(2)
   end
 
   def total_number_of_merchants
@@ -71,8 +78,8 @@ class SalesAnalyst
   end
 
   def prices_variance
-    m = average_price_per_merchant
-    sum = se.items.all.inject(0){|accum, item| accum + (item.unit_price-m)**2 }
+    m = average_average_price_per_merchant
+    sum = se.items.all.inject(0){|accum, item| accum + (item.unit_price/100.0-m)**2 }
     sum/(se.items.all.length-1).to_f
   end
 
@@ -81,11 +88,11 @@ class SalesAnalyst
   end
 
   def golden_items
-    average = average_price_per_merchant
+    average = average_average_price_per_merchant
     std_dev = prices_std_deviation
     threshold = average + std_dev * 2
     items = se.items.all
-    items.select {|item| item.unit_price > threshold}
+    items.select {|item| item.unit_price_to_dollars > threshold}
   end
 
   def average_invoices_per_merchant
