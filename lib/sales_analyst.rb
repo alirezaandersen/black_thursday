@@ -89,7 +89,6 @@ class SalesAnalyst
   end
 
   def average_invoices_per_merchant
-      merchants = se.merchants.all
     sum = merchants.reduce(0) do |total, merchant|
       total + merchant.invoices.count
     end
@@ -122,4 +121,37 @@ class SalesAnalyst
   def merchants
     se.merchants.all
   end
+
+  def top_days_by_invoice_count
+    invoice_days = invoices.map {|invoice| Date::DAYNAMES[invoice.created_at.wday]}
+
+    weekday_count = []
+    (0..7).each do |i|
+      weekday_count[i] = invoice_days.select {|day| day == Date::DAYNAMES[i]}.length
+    end
+
+    mean_invoices_per_day = invoices.length/7.0
+    sum = weekday_count.reduce(0) do |accum, wdcount|
+      accum + (wdcount-mean_invoices_per_day)**2
+    end
+    std_dev = Math.sqrt(sum/6.0)
+
+    top_days = []
+    weekday_count.each_with_index do |wdcount,i|
+      top_days << Date::DAYNAMES[i] if wdcount > mean_invoices_per_day +std_dev
+    end
+    top_days
+
+  end
+
+  def invoice_status(status)
+    status = status.to_s
+    invs = se.invoices.find_all_by_status(status)
+    ((invs.length.to_f)/(invoices.length)*100).round(2)
+  end
+
+  def invoices
+    se.invoices.all
+  end
+
 end

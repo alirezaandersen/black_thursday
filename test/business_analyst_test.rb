@@ -2,6 +2,7 @@ require 'test_helper'
 require 'sales_analyst'
 require 'sales_engine'
 require 'mocha/mini_test'
+require 'invoice'
 
 class IterTwoSalesAnalyst < Minitest::Test
   def test_can_find_average_invoice_for_a_merchant
@@ -82,7 +83,57 @@ class IterTwoSalesAnalyst < Minitest::Test
     assert_equal [m1_bad, m2_bad], sa.bottom_merchants_by_invoice_count
   end
 
+  def test_can_find_the_day_of_the_week_with_the_most_sales_single_item
+    days = ["2016-01-03 06:00:00", "2016-01-04 06:00:00", "2016-01-05 06:00:00","2016-01-06 06:00:00", "2016-01-07 06:00:00", "2016-01-08 06:00:00", "2016-01-09 06:00:00"]
+    ninvs = [3, 9, 4, 5, 1, 2, 3]
+    invs = []
+    days.each_with_index do|day, i|
+      ninvs[i].times do |icount|
+        invs << Invoice.new({
+        :id          => "#{i+21}#{icount}".to_i,
+        :customer_id => 7,
+        :merchant_id => 8888123,
+        :status      => "pending",
+        :created_at  => Time.parse(day),
+        :updated_at  => Time.now,
+        })
+      end
+    end
+    args = {invoices: invs, merchants: []}
+    se_temp = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se_temp)
+    assert_equal 27, sa.se.invoices.all.length
+    assert_equal ["Monday"], sa.top_days_by_invoice_count
+  end
 
+  def test_invoice_status_returns_percentage_of_invoices_with_a_certain_status
+    invs = []
+    3.times do |icount|
+      invs << Invoice.new({
+      :id          => "#{21}#{icount}".to_i,
+      :customer_id => 7,
+      :merchant_id => 8888123,
+      :status      => "pending",
+      :created_at  => Time.new,
+      :updated_at  => Time.now,
+    })
+    end
+    4.times do |icount|
+      invs << Invoice.new({
+      :id          => "#{387}#{icount}".to_i,
+      :customer_id => 7,
+      :merchant_id => 8888123,
+      :status      => "shipped",
+      :created_at  => Time.new,
+      :updated_at  => Time.now,
+    })
+    end
+    args = {invoices: invs, merchants: []}
+    se_temp = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se_temp)
 
-
+    assert_equal 7, sa.se.invoices.all.length
+    assert_equal 42.86, sa.invoice_status(:pending)
+    assert_equal 57.14, sa.invoice_status(:shipped)
+  end
 end
