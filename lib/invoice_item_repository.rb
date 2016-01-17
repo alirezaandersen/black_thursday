@@ -45,7 +45,4 @@ class InvoiceItemRepository
     invoices.find_all { |invoice| invoice.invoice_id == invoice_id }
   end
 
-
-
-
 end
