@@ -1,4 +1,6 @@
-class InvoiceItemReposistory
+require 'invoice_items'
+
+class InvoiceItemRepository
 
   attr_reader :invoices
 
@@ -21,8 +23,8 @@ class InvoiceItemReposistory
     end
   end
 
-  def load_invoice_items(invoice_in)
-    invoices_in.each do |inovice|
+  def load_invoice_items(invoices_in)
+    invoices_in.each do |invoice|
       invoices << invoice
     end
   end
@@ -32,11 +34,15 @@ class InvoiceItemReposistory
   end
 
   def find_by_id(id_number)
-    inovices.find { |invoice| invoice.id == id_number }
+    invoices.find { |invoice| invoice.id == id_number }
   end
 
   def find_all_by_item_id(item_id)
     invoices.find_all { |invoice| invoice.item_id == item_id}
+  end
+
+  def find_all_by_invoice_id(invoice_id)
+    invoices.find_all { |invoice| invoice.invoice_id == invoice_id }
   end
 
 
