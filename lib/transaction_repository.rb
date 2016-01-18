@@ -37,20 +37,20 @@ class TransactionRepository
     transactions
   end
 
-  def find_by_id(id_number) #should it be invoice item #
-    transactions.find { |invoice| invoice.id == id_number }
+  def find_by_id(id_number)
+    transactions.find { |transaction| transaction.id == id_number }
   end
 
   def find_all_by_invoice_id(invoice_num)
-    transactions.find_all { |invoice| invoice.invoice_id == invoice_num }
+    transactions.find_all { |transaction| transaction.invoice_id == invoice_num }
   end
 
   def find_all_by_credit_card_number(cc_num)
-    transactions.find_all { |invoice| invoice.credit_card_number == cc_num }
+    transactions.find_all { |transaction| transaction.credit_card_number == cc_num }
   end
 
   def find_all_by_result(status)
-    transactions.find_all { |invoice| invoice.result == status }
+    transactions.find_all { |transaction| transaction.result == status }
   end
 
 end

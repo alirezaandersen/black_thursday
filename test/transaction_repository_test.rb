@@ -13,11 +13,6 @@ class TransactionRepositoryTest < Minitest::Test
     @u_time = Time.new(2016, 01, 25, 05, 12, 50, "-07:00")
   end
 
-  def test_will_load_transactions_from_a_file
-    trans = TransactionRepository.new
-    trans.load_data("./data/transactions.csv")
-    assert_equal 4985, trans.all.length
-  end
 
   def test_transaction_will_return_an_all_by_invoice_id
 
@@ -124,7 +119,7 @@ class TransactionRepositoryTest < Minitest::Test
     assert_equal [trans2,trans3], trans.find_all_by_credit_card_number("5252424242424242")
   end
 
-  def test_transaction_will_return_a_transactions_with_a_vaild_CC_number
+  def test_transaction_will_return_a_transactions_with_a_invaild_CC_number
 
     trans1 = Transaction.new({
     :id => 2,
@@ -156,6 +151,12 @@ class TransactionRepositoryTest < Minitest::Test
     trans = TransactionRepository.new
     trans.load_transactions([trans1, trans2, trans3])
 
-    assert_equal [trans2,trans3], trans.find_all_by_credit_card_number("5252424242424242")
+    assert_empty trans.find_all_by_credit_card_number("5254311244242424242")
+  end
+
+  def test_will_load_transactions_from_a_file
+    trans = TransactionRepository.new
+    trans.load_data("./data/transactions.csv")
+    assert_equal 4985, trans.all.length
   end
 end
