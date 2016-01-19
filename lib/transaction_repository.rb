@@ -53,4 +53,8 @@ class TransactionRepository
     transactions.find_all { |transaction| transaction.result == status }
   end
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
 end

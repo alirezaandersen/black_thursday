@@ -45,4 +45,8 @@ class CustomerRepository
     customers.find_all { |customer| customer.last_name == last_name }
   end
 
+  def inspect
+    "#<#{self.class} #{@merchants.size} rows>"
+  end
+
 end
