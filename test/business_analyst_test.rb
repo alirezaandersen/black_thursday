@@ -136,4 +136,84 @@ class IterTwoSalesAnalyst < Minitest::Test
     assert_equal 42.86, sa.invoice_status(:pending)
     assert_equal 57.14, sa.invoice_status(:shipped)
   end
+
+  def test_invoice_is_not_paid_in_full_if_all_transactions_failed
+    inv = Invoice.new({
+    :id          => 25,
+    :customer_id => 7,
+    :merchant_id => 8888123,
+    :status      => :shipped,
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+  })
+    transactions = []
+    5.times do |num|
+      transactions << Transaction.new({
+      :id => 100+num,
+      :invoice_id => 25,
+      :credit_card_number => "4242424242424242",
+      :credit_card_expiration_date => "0220",
+      :result => "failed",
+      :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
+      :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")})
+    end
+    inv.set_transactions(transactions)
+    refute inv.is_paid_in_full?
+  end
+
+  def test_invoice_is_not_paid_in_full_if_there_is_a_single_successful_transaction
+    inv = Invoice.new({
+    :id          => 25,
+    :customer_id => 7,
+    :merchant_id => 8888123,
+    :status      => :shipped,
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+  })
+    transactions = []
+    1.times do |num|
+      transactions << Transaction.new({
+      :id => 100+num,
+      :invoice_id => 25,
+      :credit_card_number => "4242424242424242",
+      :credit_card_expiration_date => "0220",
+      :result => "success",
+      :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
+      :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")})
+    end
+    inv.set_transactions(transactions)
+    assert inv.is_paid_in_full?
+  end
+
+  def test_invoice_is_not_paid_in_full_if_there_is_a_single_successful_transaction_mixed_with_failures
+    inv = Invoice.new({
+    :id          => 25,
+    :customer_id => 7,
+    :merchant_id => 8888123,
+    :status      => :shipped,
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+  })
+    transactions = []
+    4.times do |num|
+      transactions << Transaction.new({
+      :id => 100+num,
+      :invoice_id => 25,
+      :credit_card_number => "4242424242424242",
+      :credit_card_expiration_date => "0220",
+      :result => "failed",
+      :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
+      :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")})
+    end
+    transactions.insert(3,Transaction.new({
+      :id => 1235,
+      :invoice_id => 25,
+      :credit_card_number => "4242424242424242",
+      :credit_card_expiration_date => "0220",
+      :result => "success",
+      :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
+      :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")}))
+    inv.set_transactions(transactions)
+    assert inv.is_paid_in_full?
+  end
 end

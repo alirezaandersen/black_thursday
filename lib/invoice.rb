@@ -27,4 +27,9 @@ class Invoice
     @customer = customer_in
   end
 
+  def is_paid_in_full?
+    transactions.any? {|transaction| transaction.result == "success"}
+    #if inovice's transaction show result is success then true
+  end
+
 end
