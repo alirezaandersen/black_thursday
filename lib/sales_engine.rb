@@ -25,6 +25,7 @@ class SalesEngine
     se.invoice_items.load_data(args[:invoice_items]) if args[:invoice_items]
     se.transactions.load_data(args[:transactions]) if args[:transactions]
     se.customers.load_data(args[:customers]) if args[:customers]
+    #require 'pry';binding.pry
 
     if args[:items] && args[:merchants]
       se.send_items_to_each_merchant
@@ -35,6 +36,9 @@ class SalesEngine
       se.send_merchants_to_invoices
     end
     if args[:invoice_items] && args[:invoices]
+      se.send_invoice_items_to_each_invoice
+    end
+    if args[:items] && args[:invoices]
       se.send_items_to_each_invoice
     end
     if args[:transactions] && args[:invoices]
@@ -69,7 +73,7 @@ class SalesEngine
 
   def send_items_to_each_merchant
     merchants.all.each do |merchant|
-      merchandise = items.find_all_by_merchant_id(merchant.id)
+      merchandise = items.find_all_by_merchant_id(merchant.id).uniq
       merchant.set_items(merchandise)
     end
   end
@@ -90,23 +94,31 @@ class SalesEngine
 
   def send_invoices_to_each_merchant
     merchants.all.each do |merchant|
-      invoice = invoices.find_all_by_merchant_id(merchant.id)
+      invoice = invoices.find_all_by_merchant_id(merchant.id).uniq
       merchant.set_invoices(invoice)
     end
   end
 
   def send_items_to_each_invoice
     invoices.all.each do |invoice|
-      merchandise = invoice_items.find_all_by_invoice_id(invoice.id)
-      #require 'pry'; binding.pry
-      #puts "sending items to: #{invoice.id}"
+      inv_item_list = invoice_items.find_all_by_invoice_id(invoice.id)
+      merchandise = inv_item_list.map do |inv_item|
+        items.find_by_id(inv_item.item_id)
+      end
       invoice.set_items(merchandise)
+    end
+  end
+
+  def send_invoice_items_to_each_invoice
+    invoices.all.each do |invoice|
+      merchandise = invoice_items.find_all_by_invoice_id(invoice.id).uniq
+      invoice.set_invoice_items(merchandise)
     end
   end
 
   def send_transactions_to_each_invoice
     invoices.all.each do |invoice|
-      trans = transactions.find_all_by_invoice_id(invoice.id)
+      trans = transactions.find_all_by_invoice_id(invoice.id).uniq
       invoice.set_transactions(trans)
     end
   end
@@ -129,16 +141,16 @@ class SalesEngine
     merchants.all.each do |merchant|
       merch_inv_list = invoices.find_all_by_merchant_id(merchant.id)
       customer_list_by_id = merch_inv_list.map {|inv| inv.customer_id}
-      cust_list = customer_list_by_id.map {|cust_id| customers.find_by_id(cust_id)}
+      cust_list = customer_list_by_id.map {|cust_id| customers.find_by_id(cust_id)}.uniq
       merchant.set_customers(cust_list)
     end
   end
-  
+
   def send_merchants_to_each_customer
     customers.all.each do |customer|
       invoice_list = invoices.find_all_by_customer_id(customer.id)
       merchant_id_list = invoice_list.map { |invoice| invoice.merchant_id}
-      merchant_list = merchant_id_list.map {|merchant_id| merchants.find_by_id(merchant_id)}
+      merchant_list = merchant_id_list.map {|merchant_id| merchants.find_by_id(merchant_id)}.uniq
       customer.set_merchants(merchant_list)
     end
   end

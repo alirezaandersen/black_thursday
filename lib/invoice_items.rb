@@ -1,4 +1,4 @@
-class InvoiceItems
+class InvoiceItem
 
   attr_reader :id, :item_id, :invoice_id,
   :quantity, :unit_price, :created_at, :updated_at
@@ -14,7 +14,7 @@ class InvoiceItems
   end
 
   def unit_price_to_dollars
-  (unit_price*quantity).to_f.round(2)
+  (unit_price/100.0).round(2)
 end
 
 

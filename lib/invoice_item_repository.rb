@@ -13,7 +13,7 @@ class InvoiceItemRepository
     data = CSV.open filename, headers: true, header_converters: :symbol
 
     data.each do |row|
-      invoice_items << InvoiceItems.new({:id => row[:id].to_i,
+      invoice_items << InvoiceItem.new({:id => row[:id].to_i,
       :item_id => row[:item_id].to_i,
       :invoice_id => row[:invoice_id].to_i,
       :quantity => row[:quantity].to_i,

@@ -17,7 +17,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_Invoice_can_find_by_id
-    inv_itm1 = InvoiceItems.new({
+    inv_itm1 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 101,
     :invoice_id => 201,
@@ -25,7 +25,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :created_at  => Time.new,
     :updated_at  => Time.now,
     })
-    inv_itm2 = InvoiceItems.new({
+    inv_itm2 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 102,
     :invoice_id => 202,
@@ -40,7 +40,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_Invoice_can_find_all_by_item_id
-    inv_itm1 = InvoiceItems.new({
+    inv_itm1 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 101,
     :invoice_id => 201,
@@ -48,7 +48,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :created_at  => Time.new,
     :updated_at  => Time.now,
     })
-    inv_itm2 = InvoiceItems.new({
+    inv_itm2 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 102,
     :invoice_id => 202,
@@ -56,7 +56,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :created_at  => Time.new,
     :updated_at  => Time.now,
     })
-    inv_itm3 = InvoiceItems.new({
+    inv_itm3 = InvoiceItem.new({
     :id          => 602,
     :item_id  => 102,
     :invoice_id => 203,
@@ -71,7 +71,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_Invoice_can_find_all_by_invoice_id
-    inv_itm1 = InvoiceItems.new({
+    inv_itm1 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 101,
     :invoice_id => 203,
@@ -79,7 +79,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :created_at  => Time.new,
     :updated_at  => Time.now,
     })
-    inv_itm2 = InvoiceItems.new({
+    inv_itm2 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 102,
     :invoice_id => 202,
@@ -87,7 +87,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :created_at  => Time.new,
     :updated_at  => Time.now,
     })
-    inv_itm3 = InvoiceItems.new({
+    inv_itm3 = InvoiceItem.new({
     :id          => 602,
     :item_id  => 102,
     :invoice_id => 203,
@@ -102,7 +102,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_Invoice_returns_empty_array_if_given_invalid_item_id
-    inv_itm1 = InvoiceItems.new({
+    inv_itm1 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 101,
     :invoice_id => 201,
@@ -110,7 +110,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :created_at  => Time.new,
     :updated_at  => Time.now,
     })
-    inv_itm2 = InvoiceItems.new({
+    inv_itm2 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 102,
     :invoice_id => 202,
@@ -125,7 +125,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   end
 
   def test_Invoice_returns_empty_array_if_given_invalid_invoice_id
-    inv_itm1 = InvoiceItems.new({
+    inv_itm1 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 101,
     :invoice_id => 201,
@@ -133,7 +133,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :created_at  => Time.new,
     :updated_at  => Time.now,
     })
-    inv_itm2 = InvoiceItems.new({
+    inv_itm2 = InvoiceItem.new({
     :id          => 601,
     :item_id  => 102,
     :invoice_id => 202,

@@ -1,6 +1,6 @@
 class Invoice
 
-  attr_reader :id, :customer_id, :merchant_id, :status,:created_at, :updated_at,:merchant, :items, :transactions, :customer
+  attr_reader :id, :customer_id, :merchant_id, :status,:created_at, :updated_at,:merchant, :items, :transactions, :customer, :invoice_items
 
   def initialize(args)
     @id = args[:id].to_i
@@ -19,6 +19,10 @@ class Invoice
     @items = items_in
   end
 
+  def set_invoice_items(invoice_items_in)
+    @invoice_items = invoice_items_in
+  end
+
   def set_transactions(transactions_in)
     @transactions = transactions_in
   end
@@ -32,9 +36,9 @@ class Invoice
   end
 
   def total
-    items.reduce(0) do |sum, item|
-      sum + item.unit_price*item.quantity
-    end.to_f.round(2)
+    invoice_items.reduce(0) do |sum, invoice_item|
+      sum + (invoice_item.unit_price_to_dollars)*(invoice_item.quantity)
+    end
   end
 
 end

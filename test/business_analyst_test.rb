@@ -227,9 +227,9 @@ class IterTwoSalesAnalyst < Minitest::Test
       :updated_at  => Time.now,
     })
     inv_items = []
-    unit_prices = [3.00, 6.75, 8.95, 10.00]
+    unit_prices = [300, 675, 895, 1000]
     4.times do |num|
-      inv_items << InvoiceItems.new({
+      inv_items << InvoiceItem.new({
       :id          => 100+num,
       :item_id     => 7+num*8,
       :invoice_id  => 25,
@@ -238,7 +238,7 @@ class IterTwoSalesAnalyst < Minitest::Test
       :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
       :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")})
     end
-    inv.set_items(inv_items)
-    assert_equal 83.35, inv.total
+    inv.set_invoice_items(inv_items)
+    assert_equal BigDecimal(83.35,4), inv.total
   end
 end
