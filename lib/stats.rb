@@ -1,6 +1,6 @@
 module Stats
   def self.average(nums)
-    nums.reduce(:+)/(nums.length.to_f)
+    BigDecimal.new(nums.reduce(:+)/(nums.length.to_f),10)
   end
 
   def self.sample_variance(nums)
@@ -8,10 +8,10 @@ module Stats
     sq_diffs = nums.reduce(0) do |sum, num|
       sum + (num-mean)**2
     end
-    sq_diffs/(nums.length-1)
+    BigDecimal.new(sq_diffs/(nums.length-1),10)
   end
 
   def self.sample_std_dev(nums)
-    sample_variance(nums) ** 0.5
+    BigDecimal.new(sample_variance(nums) ** 0.5, 10)
   end
 end
