@@ -33,7 +33,7 @@ class SalesEngineTest < Minitest::Test
   def test_loads_all_merchants
     se= SalesEngine.from_csv({:items => "./data/items.csv",
                   :merchants => "./data/merchants.csv"})
-    assert_equal 475, se.merchants.all.length
+    assert_equal 476, se.merchants.all.length
   end
 
   def test_can_find_a_specific_merchant
@@ -170,5 +170,5 @@ class SalesEngineTest < Minitest::Test
     assert se.invoices.all.any? {|invoice| invoice.transactions.length > 1}
 
   end
-  
+
 end

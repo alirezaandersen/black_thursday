@@ -255,7 +255,7 @@ class SalesAnalystTest < Minitest::Test
                   "./data/items.csv",
                   :merchants => "./data/merchants.csv"})
     sa = SalesAnalyst.new(se)
-    assert_equal 2.88, sa.average_items_per_merchant
+    assert_equal 2.87, sa.average_items_per_merchant
   end
 
   def test_can_calculate_the_standard_deviation_of_items_per_merchant
@@ -279,7 +279,7 @@ class SalesAnalystTest < Minitest::Test
                   "./data/items.csv",
                   :merchants => "./data/merchants.csv"})
     sa = SalesAnalyst.new(se)
-    assert_equal 350.29,
+    assert_equal 349.56,
     sa.average_average_price_per_merchant
   end
 

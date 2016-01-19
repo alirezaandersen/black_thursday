@@ -23,7 +23,7 @@ class SmallMerchantRepositoryTest < Minitest::Test
     assert_equal "Erinna's dog spoiling services", mr.all[1].name
     assert_equal 80, mr.all[2].id
   end
-  
+
 end
 
 
@@ -34,7 +34,7 @@ class FromFileMerchantRepositoryTest < Minitest::Test
     mr.load_data("./data/merchants.csv")
     assert_equal 12334105, mr.all[0].id
     assert_equal "Shopin1901", mr.all[0].name
-    assert_equal 475, mr.all.length
+    assert_equal 476, mr.all.length
   end
 
   def test_find_by_matching_id

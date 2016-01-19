@@ -13,7 +13,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   def test_will_load_from_a_file
     inv_itm = InvoiceItemRepository.new
     inv_itm.load_data("./data/invoice_items.csv")
-    assert_equal 21687, inv_itm.all.length
+    assert_equal 21830, inv_itm.all.length
   end
 
   def test_Invoice_can_find_by_id
