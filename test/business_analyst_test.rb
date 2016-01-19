@@ -103,7 +103,7 @@ class IterTwoSalesAnalyst < Minitest::Test
     se_temp = SalesEngine.from_data(args)
     sa = SalesAnalyst.new(se_temp)
     assert_equal 27, sa.se.invoices.all.length
-    assert_equal [:Monday], sa.top_days_by_invoice_count
+    assert_equal ["Monday"], sa.top_days_by_invoice_count
   end
 
   def test_invoice_status_returns_percentage_of_invoices_with_a_certain_status

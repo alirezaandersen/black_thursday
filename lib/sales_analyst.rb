@@ -147,7 +147,7 @@ class SalesAnalyst
       top_days << Date::DAYNAMES[i] if wdcount > (mean_invoices_per_day +std_dev)
     end
 
-    top_days.map {|top_day| top_day.to_sym}
+    top_days.map {|top_day| top_day}
 
   end
 
