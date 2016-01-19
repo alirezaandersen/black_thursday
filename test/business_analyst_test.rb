@@ -216,4 +216,29 @@ class IterTwoSalesAnalyst < Minitest::Test
     inv.set_transactions(transactions)
     assert inv.is_paid_in_full?
   end
+
+  def test_invoice_can_calculate_its_total
+    inv = Invoice.new({
+      :id          => 25,
+      :customer_id => 7,
+      :merchant_id => 8888123,
+      :status      => :shipped,
+      :created_at  => Time.new,
+      :updated_at  => Time.now,
+    })
+    inv_items = []
+    unit_prices = [3.00, 6.75, 8.95, 10.00]
+    4.times do |num|
+      inv_items << InvoiceItems.new({
+      :id          => 100+num,
+      :item_id     => 7+num*8,
+      :invoice_id  => 25,
+      :quantity    => num+1,
+      :unit_price  => BigDecimal.new(unit_prices[num],4),
+      :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
+      :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")})
+    end
+    inv.set_items(inv_items)
+    assert_equal 83.35, inv.total
+  end
 end

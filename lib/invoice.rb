@@ -29,7 +29,12 @@ class Invoice
 
   def is_paid_in_full?
     transactions.any? {|transaction| transaction.result == "success"}
-    #if inovice's transaction show result is success then true
+  end
+
+  def total
+    items.reduce(0) do |sum, item|
+      sum + item.unit_price*item.quantity
+    end.to_f.round(2)
   end
 
 end
