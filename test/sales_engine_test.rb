@@ -157,4 +157,18 @@ class SalesEngineTest < Minitest::Test
     merchant_names = customer.merchants.map {|merchant| merchant.name}
     assert_equal ["AgeofSplendor", "LovesVariety", "esellermart", "BEEEPS", "ShopAtPinkFlamingo", "BarreSoHard", "outletEsteCeramiche"], merchant_names
   end
+
+  def test_are_there_any_invoices_with_more_than_one_transaction
+    se = SalesEngine.from_csv({
+    :items => "./data/items.csv",
+    :merchants => "./data/merchants.csv",
+    :invoices => "./data/invoices.csv",
+    :invoice_items => "./data/invoice_items.csv",
+    :transactions => "./data/transactions.csv",
+    :customers => "./data/customers.csv"
+    })
+    assert se.invoices.all.any? {|invoice| invoice.transactions.length > 1}
+
+  end
+  
 end
