@@ -56,8 +56,8 @@ class InternSalesAnalyst < Minitest::Test
     se_temp = SalesEngine.from_data(args)
     sa = SalesAnalyst.new(se_temp)
 
-    assert_equal 2, sa.sales_engine.merchants.all.length
-    assert_equal 6, sa.sales_engine.items.all.length
+    assert_equal 2, sa.se.merchants.all.length
+    assert_equal 6, sa.se.items.all.length
 
     assert_equal 3, sa.average_items_per_merchant
   end
@@ -237,7 +237,6 @@ class InternSalesAnalyst < Minitest::Test
     assert_equal 15.44, sa.average_average_price_per_merchant
     assert_equal [i4], sa.golden_items
   end
-
 end
 
 class SalesAnalystTest < Minitest::Test
@@ -247,7 +246,7 @@ class SalesAnalystTest < Minitest::Test
                   "./data/items.csv",
                   :merchants => "./data/merchants.csv"})
     sa = SalesAnalyst.new(se)
-    assert_kind_of SalesEngine, sa.sales_engine
+    assert_kind_of SalesEngine, sa.se
   end
 
   def test_average_items_per_merchant
