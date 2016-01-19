@@ -1,6 +1,6 @@
 class Customer
 
-  attr_reader :id, :first_name, :last_name, :created_at, :updated_at
+  attr_reader :id, :first_name, :last_name, :created_at, :updated_at, :merchants
 
   def initialize(args)
     @id = args[:id].to_i
@@ -10,4 +10,8 @@ class Customer
     @updated_at = args[:updated_at]
   end
 
+  def set_merchants(merch_in)
+    @merchants = merch_in
+  end
+  
 end

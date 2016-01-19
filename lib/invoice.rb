@@ -1,6 +1,6 @@
 class Invoice
 
-  attr_reader :id, :customer_id, :merchant_id, :status,:created_at, :updated_at,:merchant
+  attr_reader :id, :customer_id, :merchant_id, :status,:created_at, :updated_at,:merchant, :items, :transactions, :customer
 
   def initialize(args)
     @id = args[:id].to_i
@@ -11,8 +11,20 @@ class Invoice
     @updated_at = args[:updated_at]
   end
 
-  def set_merchant(merchant)
-    @merchant = merchant
+  def set_merchant(merchant_in)
+    @merchant = merchant_in
+  end
+
+  def set_items(items_in)
+    @items = items_in
+  end
+
+  def set_transactions(transactions_in)
+    @transactions = transactions_in
+  end
+
+  def set_customer(customer_in)
+    @customer = customer_in
   end
 
 end

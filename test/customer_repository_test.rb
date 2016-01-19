@@ -71,7 +71,6 @@ class CustomerRepositoryTest < Minitest::Test
   end
 
   def test_customers_last_name_will_be_returned
-    skip
     custom1 = Customer.new({
     :id => 2,
     :first_name => "Glitter",
