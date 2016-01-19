@@ -19,14 +19,10 @@ class SalesEngine
 
   def self.from_csv(args)
     se = SalesEngine.new
-    se.items.load_data(args[:items]) if args[:items]
-    se.merchants.load_data(args[:merchants]) if args[:merchants]
-    se.invoices.load_data(args[:invoices]) if args[:invoices]
-    se.invoice_items.load_data(args[:invoice_items]) if args[:invoice_items]
-    se.transactions.load_data(args[:transactions]) if args[:transactions]
-    se.customers.load_data(args[:customers]) if args[:customers]
-    #require 'pry';binding.pry
-
+    args.each do |key, value|
+      se.send(key).load_data(value)
+    end
+    
     if args[:items] && args[:merchants]
       se.send_items_to_each_merchant
       se.send_merchant_to_all_items
