@@ -75,5 +75,100 @@ class SalesEngineTest < Minitest::Test
     assert_equal 6, merchant.invoices.length
     assert merchant.invoices.all? {|invoice| invoice.merchant.name == "PackingMonkey"}
   end
+
+  def test_Sales_data_can_be_loaded
+    skip
+    se = SalesEngine.from_csv({
+    :items => "./data/items.csv",
+    :merchants => "./data/merchants.csv",
+    :invoices => "./data/invoices.csv",
+    :invoice_items => "./data/invoice_items.csv",
+    :transactions => "./data/transactions.csv",
+    :customers => "./data/customers.csv"
+    })
+    assert_equal 475, se.merchants.all.length
+    assert_equal 1367, se.items.all.length
+    assert_equal 4985, se.invoices.all.length
+    assert_equal 21687, se.invoice_items.all.length
+    assert_equal 4985, se.transactions.all.length
+    assert_equal 1000, se.customers.all.length
+  end
+
+  def test_sales_engine_establishes_relationships_for_invoices
+    skip
+    se = SalesEngine.from_csv({
+    :items => "./data/items.csv",
+    :merchants => "./data/merchants.csv",
+    :invoices => "./data/invoices.csv",
+    :invoice_items => "./data/invoice_items.csv",
+    :transactions => "./data/transactions.csv",
+    :customers => "./data/customers.csv"
+    })
+    invoice = se.invoices.find_by_id(10)
+    assert_equal 12334839, invoice.merchant_id
+    assert_equal 5, invoice.items.length
+    assert_equal 1, invoice.transactions.length
+    assert_equal "Cecelia", invoice.customer.first_name
+  end
+
+  def test_transactions_know_which_invoice_its_associated_with
+    skip
+    se = SalesEngine.from_csv({
+    :items => "./data/items.csv",
+    :merchants => "./data/merchants.csv",
+    :invoices => "./data/invoices.csv",
+    :invoice_items => "./data/invoice_items.csv",
+    :transactions => "./data/transactions.csv",
+    :customers => "./data/customers.csv"
+    })
+    transaction = se.transactions.find_by_id(40)
+    assert_equal 4469794222279759, transaction.credit_card_number
+    assert_equal "Fadel", transaction.invoice.customer.last_name # => invoice
+  end
+
+  def test_merchant_can_find_multiple_customers
+    skip
+    se = SalesEngine.from_csv({
+    :items => "./data/items.csv",
+    :merchants => "./data/merchants.csv",
+    :invoices => "./data/invoices.csv",
+    :invoice_items => "./data/invoice_items.csv",
+    :transactions => "./data/transactions.csv",
+    :customers => "./data/customers.csv"
+    })
+    merchant = se.merchants.find_by_id(12334193)
+    assert_equal "TheHamAndRat",merchant.name
+    assert_equal 4, merchant.customers.length
+    assert_equal 4, merchant.invoices.length
+    assert merchant.customers.all? {|customer| customer.kind_of?(Customer)}
+  end
+
+  def test_merchant_can_find_mutliple_customers
+    se = SalesEngine.from_csv({
+    :items => "./data/items.csv",
+    :merchants => "./data/merchants.csv",
+    :invoices => "./data/invoices.csv",
+    :invoice_items => "./data/invoice_items.csv",
+    :transactions => "./data/transactions.csv",
+    :customers => "./data/customers.csv"
+    })
+    customer = se.customers.find_by_id(60)
+    assert_equal "Dicki", customer.last_name
+    merchant_names = customer.merchants.map {|merchant| merchant.name}
+    assert_equal ["AgeofSplendor", "LovesVariety", "esellermart", "BEEEPS", "ShopAtPinkFlamingo", "BarreSoHard", "outletEsteCeramiche"], merchant_names
+  end
+
+  def test_are_there_any_invoices_with_more_than_one_transaction
+    se = SalesEngine.from_csv({
+    :items => "./data/items.csv",
+    :merchants => "./data/merchants.csv",
+    :invoices => "./data/invoices.csv",
+    :invoice_items => "./data/invoice_items.csv",
+    :transactions => "./data/transactions.csv",
+    :customers => "./data/customers.csv"
+    })
+    assert se.invoices.all.any? {|invoice| invoice.transactions.length > 1}
+
+  end
   
 end

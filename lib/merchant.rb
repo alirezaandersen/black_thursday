@@ -1,6 +1,6 @@
 class Merchant
 
-  attr_reader :name, :id, :items, :invoices
+  attr_reader :name, :id, :items, :invoices, :customers
 
   def initialize(args)
     @name = args[:name]
@@ -14,6 +14,10 @@ class Merchant
 
   def set_invoices(inv)
     @invoices = inv
+  end
+
+  def set_customers(cust)
+    @customers = cust
   end
 
 end

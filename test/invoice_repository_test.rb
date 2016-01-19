@@ -129,7 +129,7 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal [inv1, inv2], invr.find_all_by_customer_id(25)
   end
 
-  def test_will_return_empty_array_if_given_invlaid_customer_id
+  def test_will_return_empty_array_if_given_invalid_customer_id
     inv1 = Invoice.new({
       :id          => 632,
       :customer_id => 25,

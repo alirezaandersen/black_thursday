@@ -59,7 +59,7 @@ class ItemTest < Minitest::Test
         assert i.created_at.kind_of?(Time)
     end
 
-    def test_return_item_created_time
+    def test_return_item_updated_time
       i = Item.new({ :name => "Pencil",
         :description => "You can use it to write things",
         :unit_price => BigDecimal.new(10.99,4),
