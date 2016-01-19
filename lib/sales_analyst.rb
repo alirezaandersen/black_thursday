@@ -146,8 +146,7 @@ class SalesAnalyst
     weekday_count.each_with_index do |wdcount,i|
       top_days << Date::DAYNAMES[i] if wdcount > (mean_invoices_per_day +std_dev)
     end
-
-    top_days.map {|top_day| top_day}
+    top_days
 
   end
 

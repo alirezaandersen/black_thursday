@@ -14,8 +14,8 @@ class InvoiceItem
   end
 
   def unit_price_to_dollars
-  (unit_price/100.0).round(2)
-end
+    (unit_price/100.0).round(2)
+  end
 
 
 end
