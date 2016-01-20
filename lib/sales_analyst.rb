@@ -110,28 +110,47 @@ class SalesAnalyst
   end
 
   def top_buyers(n = 20)
-    # calculate the total of all their invøices (minus the invalid transactions)
-    # returns the top n customers sorted by their invoice totals
-    customers_invoices = customers.map do |customer|
-      se.invoices.find_all_by_customer_id(customer.id)
-    end
+  custs_with_it = customers.zip(invoice_totals)
+  custs_with_it.sort_by do |cust, tot|
+    tot
+  end.map do |cust,tot|
+    cust
+  end[-1*n..-1].reverse
+end
 
-    invoice_totals = customers_invoices.map do |invoice_list|
-      invoice_list.reduce(0) do |sum, inv|
-        if inv.is_paid_in_full?
-          sum+inv.total
-        else
-          sum+0
-        end
-      end
-    end
-    custs_with_it = customers.zip(invoice_totals)
-    custs_with_it.sort_by do |cust, tot|
-      tot
-    end.map do |cust,tot|
-      cust
-    end[-1*n..-1].reverse
+def customers_invoices
+  customers.map do |customer|
+    se.invoices.find_all_by_customer_id(customer.id)
   end
+end
+
+def invoice_totals
+  customers_invoices.map do |invoice_list|
+    invoice_list.reduce(0) do |sum, inv|
+      sum+inv.total if inv.is_paid_in_full?
+    end
+  end
+end
+  #   customers_invoices = customers.map do |customer|
+  #     se.invoices.find_all_by_customer_id(customer.id)
+  #   end
+  #
+  #   invoice_totals = customers_invoices.map do |invoice_list|
+  #     invoice_list.reduce(0) do |sum, inv|
+  #       if inv.is_paid_in_full?
+  #         sum+inv.total
+  #       else
+  #         sum+0
+  #       end
+  #     end
+  #   end
+  #   custs_with_it = customers.zip(invoice_totals)
+  #   custs_with_it.sort_by do |cust, tot|
+  #     tot
+  #   end.map do |cust,tot|
+  #     cust
+  #   end[-1*n..-1].reverse
+  # end
 
   def top_merchant_for_customer(customer_id)
     invoices = se.invoices.find_all_by_customer_id(customer_id)
