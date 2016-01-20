@@ -70,6 +70,9 @@ class SalesEngine
     if args[:invoice_items] && args[:invoices]
       se.send_invoice_items_to_each_invoice
     end
+    if args[:customers] && args[:invoices]
+      se.send_customer_to_each_invoice
+    end
     se
   end
 

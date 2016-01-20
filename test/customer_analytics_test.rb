@@ -270,6 +270,409 @@ class CustomerAnalyticsTest < Minitest::Test
     assert_equal 5, sa.best_invoice_by_quantity.quantity
   end
 
+  def test_can_find_customers_with_unpaid_invoices_one_customer_with_one_customer_without
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+    c2 = Customer.new({
+    :id => 21,
+    :first_name => "Ali",
+    :last_name => "Andersen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
 
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(false)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(true)
+
+    args={customers: [c1,c2], invoices: [inv1, inv2]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [c2], sa.customers_with_unpaid_invoices
+  end
+
+  def test_can_find_customers_with_unpaid_invoices_two_customers
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+    c2 = Customer.new({
+    :id => 21,
+    :first_name => "Ali",
+    :last_name => "Andersen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(false)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(false)
+
+    args={customers: [c1,c2], invoices: [inv1, inv2]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [c2,c1], sa.customers_with_unpaid_invoices
+  end
+
+  def test_can_find_customers_with_unpaid_invoices_customer_with_two_unpaid_invoices
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+    c2 = Customer.new({
+    :id => 21,
+    :first_name => "Ali",
+    :last_name => "Andersen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(false)
+
+    inv3 = Invoice.new({
+    :id          => 3,
+    :customer_id => 987,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv3.stubs(:is_paid_in_full?).returns(false)
+
+
+    args={customers: [c1,c2], invoices: [inv1, inv2, inv3]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [c1], sa.customers_with_unpaid_invoices
+  end
+
+  def test_can_find_customers_with_unpaid_invoices_customer_with_an_unpaid_and_a_paid_invoice
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+    c2 = Customer.new({
+    :id => 21,
+    :first_name => "Ali",
+    :last_name => "Andersen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(true)
+
+    inv3 = Invoice.new({
+    :id          => 3,
+    :customer_id => 987,
+    :merchant_id => 65,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv3.stubs(:is_paid_in_full?).returns(false)
+
+
+    args={customers: [c1,c2], invoices: [inv1, inv2, inv3]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [c1], sa.customers_with_unpaid_invoices
+  end
+
+  def test_can_find_one_time_buyers_single_customers
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 987,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+    args={customers: [c1], invoices: [inv1]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [c1], sa.one_time_buyers
+  end
+
+  def test_can_find_one_time_buyers_two_customers_one_with_multiple_invoices
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    c2 = Customer.new({
+    :id => 21,
+    :first_name => "Ali",
+    :last_name => "Andersen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(true)
+
+    inv3 = Invoice.new({
+    :id          => 3,
+    :customer_id => 987,
+    :merchant_id => 65,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv3.stubs(:is_paid_in_full?).returns(true)
+
+    args={customers: [c1,c2], invoices: [inv1, inv2, inv3]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [c2], sa.one_time_buyers
+  end
+
+  def test_can_find_no_one_time_buyers_single_customer_no_valid_invoices
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 987,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(false)
+    args={customers: [c1], invoices: [inv1]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [], sa.one_time_buyers
+  end
+
+  def test_can_find_one_time_buyers_two_customers_no_valid_invoices
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    c2 = Customer.new({
+    :id => 21,
+    :first_name => "Ali",
+    :last_name => "Andersen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(false)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(false)
+
+    inv3 = Invoice.new({
+    :id          => 3,
+    :customer_id => 987,
+    :merchant_id => 65,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv3.stubs(:is_paid_in_full?).returns(false)
+
+    args={customers: [c1,c2], invoices: [inv1, inv2, inv3]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [], sa.one_time_buyers
+  end
+
+  def test_can_find_one_time_buyers_if_has_only_one_paid_invoice
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    c2 = Customer.new({
+    :id => 21,
+    :first_name => "Ali",
+    :last_name => "Andersen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(true)
+
+    inv3 = Invoice.new({
+    :id          => 3,
+    :customer_id => 987,
+    :merchant_id => 65,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv3.stubs(:is_paid_in_full?).returns(false)
+
+    inv4 = Invoice.new({
+    :id          => 4,
+    :customer_id => 987,
+    :merchant_id => 333,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv4.stubs(:is_paid_in_full?).returns(false)
+
+    args={customers: [c1,c2], invoices: [inv1, inv2, inv3, inv4]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [c2,c1], sa.one_time_buyers
+  end
 
 end

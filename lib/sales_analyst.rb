@@ -1,4 +1,5 @@
 require_relative 'stats'
+require 'pry'
 class SalesAnalyst
 
   attr_reader :se
@@ -156,6 +157,31 @@ class SalesAnalyst
     end
   end
 
+  def one_time_buyers
+    valid_invoices = invoices.select do |invoice|
+      invoice.is_paid_in_full?
+    end
+    vi = valid_invoices.group_by do |invoice|
+      invoice.customer_id
+    end
+
+    cust_ids = vi.keys.select do |key|
+      vi[key].length == 1
+    end
+    cust_ids.map do |cust_id|
+      se.customers.find_by_id(cust_id)
+    end
+  end
+
+  def customers_with_unpaid_invoices
+    unpaid_invoices = invoices.find_all do |invoice|
+      !invoice.is_paid_in_full?
+    end
+    unpaid_invoices.map do |invoice|
+      invoice.customer
+    end.uniq
+  end
+
   def invoices
     se.invoices.all
   end
@@ -170,6 +196,14 @@ class SalesAnalyst
 
   def customers
     se.customers.all
+  end
+
+  def merchants_with_pending_invoices
+    merchants.select do |merchant|
+      merchant.invoices.any? do |invoice|
+        !invoice.is_paid_in_full?
+      end
+    end
   end
 
 end
