@@ -108,6 +108,46 @@ class SalesAnalyst
     ((invs_count.to_f)/(invoices.length)*100).round(2)
   end
 
+  def top_buyers(n = 20)
+    # calculate the total of all their invøices (minus the invalid transactions)
+    # returns the top n customers sorted by their invoice totals
+    customers_invoices = customers.map do |customer|
+      se.invoices.find_all_by_customer_id(customer.id)
+    end
+
+    invoice_totals = customers_invoices.map do |invoice_list|
+      invoice_list.reduce(0) do |sum, inv|
+        if inv.is_paid_in_full?
+          sum+inv.total
+        else
+          sum+0
+        end
+      end
+    end
+    custs_with_it = customers.zip(invoice_totals)
+    custs_with_it.sort_by do |cust, tot|
+      tot
+    end.map do |cust,tot|
+      cust
+    end[-1*n..-1].reverse
+  end
+
+  def top_merchant_for_customer(customer_id)
+    invoices = se.invoices.find_all_by_customer_id(customer_id)
+    item_counts = Hash.new(0)
+    invoices.each do |invoice|
+      inv_items = invoice.invoice_items
+      item_count = inv_items.reduce(0) do |sum, inv_item|
+        sum + inv_item.quantity
+      end
+      item_counts[invoice.merchant_id] += item_count
+    end
+    max_merchant_id = item_counts.max_by do |key,value|
+      value
+    end[0]
+    se.merchants.find_by_id(max_merchant_id)
+  end
+
   def invoices
     se.invoices.all
   end
@@ -118,6 +158,10 @@ class SalesAnalyst
 
   def items
     se.items.all
+  end
+
+  def customers
+    se.customers.all
   end
 
 end

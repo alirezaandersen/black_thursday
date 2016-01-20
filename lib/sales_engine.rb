@@ -22,7 +22,7 @@ class SalesEngine
     args.each do |key, value|
       se.send(key).load_data(value)
     end
-    
+
     if args[:items] && args[:merchants]
       se.send_items_to_each_merchant
       se.send_merchant_to_all_items
@@ -53,9 +53,12 @@ class SalesEngine
 
   def self.from_data(args)
     se = SalesEngine.new
+
     se.items.load_items(args[:items]) if args[:items]
     se.merchants.load_merchants(args[:merchants]) if args[:merchants]
     se.invoices.load_invoices(args[:invoices]) if args[:invoices]
+    se.invoice_items.load_invoice_items(args[:invoice_items]) if args[:invoice_items]
+    se.customers.load_customers(args[:customers])
     if args[:items] && args[:merchants]
       se.send_items_to_each_merchant
       se.send_merchant_to_all_items
@@ -63,6 +66,9 @@ class SalesEngine
     if args[:merchants] && args[:invoices]
       se.send_invoices_to_each_merchant
       se.send_merchants_to_invoices
+    end
+    if args[:invoice_items] && args[:invoices]
+      se.send_invoice_items_to_each_invoice
     end
     se
   end
@@ -106,6 +112,7 @@ class SalesEngine
   end
 
   def send_invoice_items_to_each_invoice
+
     invoices.all.each do |invoice|
       merchandise = invoice_items.find_all_by_invoice_id(invoice.id).uniq
       invoice.set_invoice_items(merchandise)

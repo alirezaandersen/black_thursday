@@ -1,6 +1,6 @@
 class Invoice
 
-  attr_reader :id, :customer_id, :merchant_id, :status,:created_at, :updated_at,:merchant, :items, :transactions, :customer, :invoice_items
+  attr_reader :id, :customer_id, :merchant_id, :status, :created_at, :updated_at,:merchant, :items, :transactions, :customer, :invoice_items
 
   def initialize(args)
     @id = args[:id].to_i
