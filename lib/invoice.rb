@@ -32,12 +32,22 @@ class Invoice
   end
 
   def is_paid_in_full?
-    transactions.any? {|transaction| transaction.result == "success"}
+    transactions.any? {|transaction| transaction.result == "success"} if transactions
   end
 
   def total
+    return 0 unless is_paid_in_full?
+    return 0 unless invoice_items
     invoice_items.reduce(0) do |sum, invoice_item|
       sum + (invoice_item.unit_price_to_dollars)*(invoice_item.quantity)
+    end
+  end
+
+  def quantity
+    return 0 unless is_paid_in_full?
+    return 0 unless invoice_items
+    invoice_items.reduce(0) do |sum, invoice_item|
+      sum + invoice_item.quantity
     end
   end
 

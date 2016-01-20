@@ -195,4 +195,81 @@ class CustomerAnalyticsTest < Minitest::Test
     assert_equal m1, sa.top_merchant_for_customer(21)
   end
 
+  def test_best_invoice_by_revenue_and_quantity_single_invoice_item
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+    inv_item1 = InvoiceItem.new({
+    :id          => 998,
+    :item_id     => 25,
+    :invoice_id  => 1,
+    :quantity    => 3,
+    :unit_price  => BigDecimal.new(1000,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+    args={invoices: [inv1], invoice_items: [inv_item1]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal inv1, sa.best_invoice_by_revenue
+    assert_equal BigDecimal.new(30.00,4),  sa.best_invoice_by_revenue.total
+    assert_equal inv1, sa.best_invoice_by_quantity
+    assert_equal 3, sa.best_invoice_by_quantity.quantity
+  end
+
+  def test_best_invoice_by_revenue_and_quantity_single_invoice_item_only_if_invoice_has_been_paid
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 21,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(false)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 31,
+    :merchant_id => 635,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(true)
+
+    inv_item1 = InvoiceItem.new({
+    :id          => 998,
+    :item_id     => 25,
+    :invoice_id  => 1,
+    :quantity    => 3,
+    :unit_price  => BigDecimal.new(1000,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    inv_item2 = InvoiceItem.new({
+    :id          => 998,
+    :item_id     => 25,
+    :invoice_id  => 2,
+    :quantity    => 5,
+    :unit_price  => BigDecimal.new(1565,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    args={invoices: [inv1, inv2], invoice_items: [inv_item1, inv_item2]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal inv2, sa.best_invoice_by_revenue
+    assert_equal BigDecimal.new(78.25,4),  sa.best_invoice_by_revenue.total
+    assert_equal inv2, sa.best_invoice_by_quantity
+    assert_equal 5, sa.best_invoice_by_quantity.quantity
+  end
+
+
+
 end

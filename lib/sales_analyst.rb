@@ -136,16 +136,24 @@ class SalesAnalyst
     invoices = se.invoices.find_all_by_customer_id(customer_id)
     item_counts = Hash.new(0)
     invoices.each do |invoice|
-      inv_items = invoice.invoice_items
-      item_count = inv_items.reduce(0) do |sum, inv_item|
-        sum + inv_item.quantity
-      end
-      item_counts[invoice.merchant_id] += item_count
+      item_counts[invoice.merchant_id] += invoice.quantity
     end
     max_merchant_id = item_counts.max_by do |key,value|
       value
     end[0]
     se.merchants.find_by_id(max_merchant_id)
+  end
+
+  def best_invoice_by_revenue
+    invoices.max_by do |invoice|
+      invoice.total
+    end
+  end
+
+  def best_invoice_by_quantity
+    invoices.max_by do |invoice|
+      invoice.quantity
+    end
   end
 
   def invoices

@@ -58,7 +58,7 @@ class SalesEngine
     se.merchants.load_merchants(args[:merchants]) if args[:merchants]
     se.invoices.load_invoices(args[:invoices]) if args[:invoices]
     se.invoice_items.load_invoice_items(args[:invoice_items]) if args[:invoice_items]
-    se.customers.load_customers(args[:customers])
+    se.customers.load_customers(args[:customers]) if args[:customers]
     if args[:items] && args[:merchants]
       se.send_items_to_each_merchant
       se.send_merchant_to_all_items
