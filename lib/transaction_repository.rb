@@ -38,11 +38,15 @@ class TransactionRepository
   end
 
   def find_all_by_invoice_id(invoice_num)
-    transactions.find_all { |transaction| transaction.invoice_id == invoice_num }
+    transactions.find_all do |transaction|
+      transaction.invoice_id == invoice_num
+    end
   end
 
   def find_all_by_credit_card_number(cc_num)
-    transactions.find_all { |transaction| transaction.credit_card_number == cc_num }
+    transactions.find_all do |transaction|
+      transaction.credit_card_number == cc_num
+    end
   end
 
   def find_all_by_result(status)

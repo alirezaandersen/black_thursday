@@ -6,7 +6,9 @@ require_relative 'transaction_repository'
 require_relative 'invoice_item_repository'
 
 class SalesEngine
-  attr_reader :items, :merchants, :invoices, :customers, :transactions, :invoice_items
+  attr_reader :items, :merchants, :invoices,
+              :customers, :transactions,
+              :invoice_items
 
   def initialize
     @items = ItemRepository.new

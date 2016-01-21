@@ -8,5 +8,5 @@ class Merchant
     @id = args[:id].to_i
     @invoices = []
   end
-  
+
 end

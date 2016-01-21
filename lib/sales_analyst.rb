@@ -44,7 +44,9 @@ class SalesAnalyst
 
   def prices_variance
     m = average_average_price_per_merchant
-    sum = items.inject(0){|accum, item| accum + (item.unit_price_to_dollars-m)**2 }
+    sum = items.inject(0) do |accum, item|
+      accum + (item.unit_price_to_dollars-m)**2
+    end
     sum/(items.length-1)
   end
 

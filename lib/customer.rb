@@ -28,7 +28,9 @@ class Customer
   end
 
   def most_recent_invoices
-    recent_date = fully_paid_invoices.max_by {|invoice| invoice.created_at }.created_at
+    recent_date = fully_paid_invoices.max_by do |invoice|
+      invoice.created_at
+    end.created_at
     fully_paid_invoices.select {|invoice| invoice.created_at == recent_date}
   end
 

@@ -13,7 +13,8 @@ class Invoice
   end
 
   def is_paid_in_full?
-    transactions.any? {|transaction| transaction.result == "success"} if transactions
+    return unless transactions
+    transactions.any? {|transaction| transaction.result == "success"}
   end
 
   def total

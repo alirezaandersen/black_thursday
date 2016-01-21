@@ -77,7 +77,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_Sales_data_can_be_loaded
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -95,7 +94,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_sales_engine_establishes_relationships_for_invoices
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -112,7 +110,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_transactions_know_which_invoice_its_associated_with
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -127,7 +124,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_merchant_can_find_multiple_customers
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -144,7 +140,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_customer_can_find_multiple_merchants
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -157,20 +152,6 @@ class SalesEngineTest < Minitest::Test
     assert_equal "Dicki", customer.last_name
     merchant_names = customer.merchants.map {|merchant| merchant.name}
     assert_equal ["AgeofSplendor", "LovesVariety", "esellermart", "BEEEPS", "ShopAtPinkFlamingo", "BarreSoHard", "outletEsteCeramiche"], merchant_names
-  end
-
-  def test_are_there_any_invoices_with_more_than_one_transaction
-    skip
-    se = SalesEngine.from_csv({
-    :items => "./data/items.csv",
-    :merchants => "./data/merchants.csv",
-    :invoices => "./data/invoices.csv",
-    :invoice_items => "./data/invoice_items.csv",
-    :transactions => "./data/transactions.csv",
-    :customers => "./data/customers.csv"
-    })
-    assert se.invoices.all.any? {|invoice| invoice.transactions.length > 1}
-
   end
 
 end
