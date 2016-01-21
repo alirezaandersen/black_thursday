@@ -161,34 +161,35 @@ class SalesAnalyst
     vi.keys.select { |key| vi[key].length == 1 }
   end
 
-  def one_time_buyers_item
-      all_invoice_items = one_time_buyers.flat_map do |customer|
-        customer.invoice_items
-      end
-      item_count = Hash.new(0)
-      all_invoice_items.each do |inv_item|
-        item_count[inv_item.item_id] += inv_item.quantity
-      end
-      max_count = item_count.values.max
-      max_item_ids = []
-      item_count.each do |item_id, quantity|
-        max_item_ids << item_id if item_count[item_id] == max_count
-      end
-      max_items = max_item_ids.map {|max_id| se.items.find_by_id(max_id)}
-      max_items.sort_by {|item| item.id}
+  def one_time_buyers_item_counts
+      customer.invoice_items
     end
+    item_counts = Hash.new(0)
+    all_invoice_items.each do |inv_item|
+      item_counts[inv_item.item_id] += inv_item.quantity
+    end
+    item_counts
+  end
+
+  def one_time_buyers_item
+    item_counts = one_time_buyers_item_counts
+    max_count = item_counts.values.max
+    #get all item_ids with value == max_count
+    max_item_ids = []
+    item_counts.each do |item_id, quantity|
+      max_item_ids << item_id if item_counts[item_id] == max_count
+    end
+    max_items = max_item_ids.map {|max_id| se.items.find_by_id(max_id)}
+    max_items.sort_by {|item| item.id}
+  end
 
   def most_recently_bought_items(customer_id)
-    # get customer
     customer = se.customers.find_by_id(customer_id)
-
     sorted_invoices = customer.fully_paid_invoices.sort_by {|invoice| invoice.created_at }
     recent_invoices = sorted_invoices.select do |invoice|
       invoice.created_at == sorted_invoices[-1].created_at
     end
-    recent_invoices.flat_map do |invoice|
-      invoice.items
-    end
+    recent_invoices.flat_map { |invoice| invoice.items }
   end
 
   def customers_with_unpaid_invoices
