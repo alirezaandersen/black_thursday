@@ -46,10 +46,8 @@ class SalesEngine
 
   def transfer_information(args)
     relationships.each do |to_send, receiver|
-      if args[to_send] && args[receiver]
-        send_method = "send_#{to_send}_to_#{receiver}".to_sym
-        send(send_method)
-      end
+      send_method = "send_#{to_send}_to_#{receiver}".to_sym
+      send(send_method) if args[to_send] && args[receiver]
     end
   end
 
@@ -90,19 +88,17 @@ class SalesEngine
 
   def send_items_to_invoices
     invoices.all.each do |invoice|
-      inv_item_list = invoice_items.find_all_by_invoice_id(invoice.id)
-      merchandise = inv_item_list.map do |inv_item|
+      inv_items = invoice_items.find_all_by_invoice_id(invoice.id)
+      invoice.items = inv_items.map do |inv_item|
         items.find_by_id(inv_item.item_id)
       end
-      invoice.items = merchandise
     end
   end
 
   def send_invoice_items_to_invoices
-
     invoices.all.each do |invoice|
-      merchandise = invoice_items.find_all_by_invoice_id(invoice.id).uniq
-      invoice.invoice_items = merchandise
+      inv_items = invoice_items.find_all_by_invoice_id(invoice.id).uniq
+      invoice.invoice_items = inv_items
     end
   end
 
@@ -129,19 +125,21 @@ class SalesEngine
 
   def send_customers_to_merchants
     merchants.all.each do |merchant|
-      merch_inv_list = invoices.find_all_by_merchant_id(merchant.id)
-      customer_list_by_id = merch_inv_list.map {|inv| inv.customer_id}
-      cust_list = customer_list_by_id.map {|cust_id| customers.find_by_id(cust_id)}.uniq
-      merchant.customers = cust_list
+      invs = invoices.find_all_by_merchant_id(merchant.id)
+      cust_ids = invs.map {|inv| inv.customer_id}
+      merchant.customers = cust_ids.map do |cust_id|
+        customers.find_by_id(cust_id)
+      end.uniq
     end
   end
 
   def send_merchants_to_customers
     customers.all.each do |customer|
-      invoice_list = invoices.find_all_by_customer_id(customer.id)
-      merchant_id_list = invoice_list.map { |invoice| invoice.merchant_id}
-      merchant_list = merchant_id_list.map {|merchant_id| merchants.find_by_id(merchant_id)}.uniq
-      customer.merchants = merchant_list
+      invs = invoices.find_all_by_customer_id(customer.id)
+      merchant_ids = invs.map { |invoice| invoice.merchant_id}
+      customer.merchants = merchant_ids.map do |merchant_id|
+         merchants.find_by_id(merchant_id)
+      end.uniq
     end
   end
 
