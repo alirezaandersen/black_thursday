@@ -43,6 +43,7 @@ class SalesEngine
     end
     if args[:customers] && args[:invoices]
       se.send_customer_to_each_invoice
+      se.send_invoices_to_each_customer
     end
     if args[:merchants] && args[:customers]
       se.send_customers_to_each_merchant
@@ -67,11 +68,15 @@ class SalesEngine
       se.send_invoices_to_each_merchant
       se.send_merchants_to_invoices
     end
+    if args[:items] && args[:invoices]
+      se.send_items_to_each_invoice
+    end
     if args[:invoice_items] && args[:invoices]
       se.send_invoice_items_to_each_invoice
     end
     if args[:customers] && args[:invoices]
       se.send_customer_to_each_invoice
+      se.send_invoices_to_each_customer
     end
     se
   end
@@ -101,6 +106,13 @@ class SalesEngine
     merchants.all.each do |merchant|
       invoice = invoices.find_all_by_merchant_id(merchant.id).uniq
       merchant.set_invoices(invoice)
+    end
+  end
+
+  def send_invoices_to_each_customer
+    customers.all.each do |customer|
+      invoice = invoices.find_all_by_customer_id(customer.id).uniq
+      customer.set_invoices(invoice)
     end
   end
 

@@ -675,4 +675,245 @@ class CustomerAnalyticsTest < Minitest::Test
     assert_equal [c2,c1], sa.one_time_buyers
   end
 
+  def test_can_find_one_time_buyers_items
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 987,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+
+    inv_item1 = InvoiceItem.new({
+    :id          => 31,
+    :item_id     => 7,
+    :invoice_id  => 1,
+    :quantity    => 2,
+    :unit_price  => BigDecimal.new(1900,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    inv_item2 = InvoiceItem.new({
+    :id          => 32,
+    :item_id     => 17,
+    :invoice_id  => 1,
+    :quantity    => 7,
+    :unit_price  => BigDecimal.new(4300,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    i1 = Item.new({:name => "Glitter tail braids",
+      :description => "For those flashy occasions",
+      :unit_price => BigDecimal.new(1900, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 356,
+      :id => 7})
+    i2 = Item.new({:name => "Platinum Diamond (0.25C) pawdicure",
+      :description => "Be dazzling your paws",
+      :unit_price => BigDecimal.new(4300, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 356,
+      :id => 17})
+
+    args={customers: [c1], invoices: [inv1], items: [i1, i2], invoice_items: [inv_item1, inv_item2]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [i2], sa.one_time_buyers_item
+  end
+
+  def test_can_find_one_time_buyers_items_same_quantity
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 987,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+
+    inv_item1 = InvoiceItem.new({
+    :id          => 31,
+    :item_id     => 7,
+    :invoice_id  => 1,
+    :quantity    => 2,
+    :unit_price  => BigDecimal.new(1900,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    inv_item2 = InvoiceItem.new({
+    :id          => 32,
+    :item_id     => 17,
+    :invoice_id  => 1,
+    :quantity    => 2,
+    :unit_price  => BigDecimal.new(4300,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    i1 = Item.new({:name => "Glitter tail braids",
+      :description => "For those flashy occasions",
+      :unit_price => BigDecimal.new(1900, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 356,
+      :id => 7})
+    i2 = Item.new({:name => "Platinum Diamond (0.25C) pawdicure",
+      :description => "Be dazzling your paws",
+      :unit_price => BigDecimal.new(4300, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 356,
+      :id => 17})
+
+    args={customers: [c1], invoices: [inv1], items: [i1, i2], invoice_items: [inv_item1, inv_item2]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [i1,i2], sa.one_time_buyers_item
+  end
+
+  def test_can_find_most_recently_bought_items
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 987,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+
+    inv_item1 = InvoiceItem.new({
+    :id          => 31,
+    :item_id     => 7,
+    :invoice_id  => 1,
+    :quantity    => 2,
+    :unit_price  => BigDecimal.new(1900,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    inv_item2 = InvoiceItem.new({
+    :id          => 32,
+    :item_id     => 17,
+    :invoice_id  => 1,
+    :quantity    => 2,
+    :unit_price  => BigDecimal.new(4300,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    i1 = Item.new({:name => "Glitter tail braids",
+      :description => "For those flashy occasions",
+      :unit_price => BigDecimal.new(1900, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 356,
+      :id => 7})
+    i2 = Item.new({:name => "Platinum Diamond (0.25C) pawdicure",
+      :description => "Be dazzling your paws",
+      :unit_price => BigDecimal.new(4300, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 356,
+      :id => 17})
+
+    args={customers: [c1], invoices: [inv1], items: [i1, i2], invoice_items: [inv_item1, inv_item2]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [i1,i2], sa.most_recently_bought_items(c1.id)
+  end
+
+  def test_can_find_most_recently_bought_items_if_there_is_two_invoices
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 987,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.parse("2012-01-23"),
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 430,
+    :status      => "pending",
+    :created_at  => Time.parse("2015-03-18"),
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(true)
+
+    inv_item1 = InvoiceItem.new({
+    :id          => 31,
+    :item_id     => 7,
+    :invoice_id  => 1,
+    :quantity    => 2,
+    :unit_price  => BigDecimal.new(1900,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    inv_item2 = InvoiceItem.new({
+    :id          => 32,
+    :item_id     => 17,
+    :invoice_id  => 2,
+    :quantity    => 5,
+    :unit_price  => BigDecimal.new(4300,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    i1 = Item.new({:name => "Glitter tail braids",
+      :description => "For those flashy occasions",
+      :unit_price => BigDecimal.new(1900, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 356,
+      :id => 7})
+    i2 = Item.new({:name => "Platinum Diamond (0.25C) pawdicure",
+      :description => "Be dazzling your paws",
+      :unit_price => BigDecimal.new(4300, 4),
+      :created_at => Time.new,
+      :updated_at => Time.now,
+      :merchant_id => 430,
+      :id => 17})
+
+    args={customers: [c1], invoices: [inv1, inv2], items: [i1, i2], invoice_items: [inv_item1, inv_item2]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal [i2], sa.most_recently_bought_items(c1.id)
+  end
 end

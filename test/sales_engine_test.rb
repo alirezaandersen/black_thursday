@@ -2,6 +2,8 @@ require 'test_helper'
 require 'sales_engine'
 
 class SalesEngineTest < Minitest::Test
+  se =
+
   def test_defaults_with_an_item_repository_and_a_merchant_repository
     se= SalesEngine.new
     assert_kind_of ItemRepository, se.items
@@ -77,7 +79,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_Sales_data_can_be_loaded
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -86,16 +87,15 @@ class SalesEngineTest < Minitest::Test
     :transactions => "./data/transactions.csv",
     :customers => "./data/customers.csv"
     })
-    assert_equal 475, se.merchants.all.length
+    assert_equal 476, se.merchants.all.length
     assert_equal 1367, se.items.all.length
     assert_equal 4985, se.invoices.all.length
-    assert_equal 21687, se.invoice_items.all.length
+    assert_equal 21830, se.invoice_items.all.length
     assert_equal 4985, se.transactions.all.length
     assert_equal 1000, se.customers.all.length
   end
 
   def test_sales_engine_establishes_relationships_for_invoices
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -107,12 +107,11 @@ class SalesEngineTest < Minitest::Test
     invoice = se.invoices.find_by_id(10)
     assert_equal 12334839, invoice.merchant_id
     assert_equal 5, invoice.items.length
-    assert_equal 1, invoice.transactions.length
+    assert_equal 3, invoice.transactions.length
     assert_equal "Cecelia", invoice.customer.first_name
   end
 
   def test_transactions_know_which_invoice_its_associated_with
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -123,11 +122,10 @@ class SalesEngineTest < Minitest::Test
     })
     transaction = se.transactions.find_by_id(40)
     assert_equal 4469794222279759, transaction.credit_card_number
-    assert_equal "Fadel", transaction.invoice.customer.last_name # => invoice
+    assert_equal "Toy", transaction.invoice.customer.last_name
   end
 
   def test_merchant_can_find_multiple_customers
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",

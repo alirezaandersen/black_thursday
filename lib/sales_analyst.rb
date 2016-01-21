@@ -173,6 +173,35 @@ class SalesAnalyst
     end
   end
 
+  def one_time_buyers_item
+    all_invoice_items = one_time_buyers.flat_map do |customer|
+      customer.invoice_items
+    end
+    item_count = Hash.new(0)
+    all_invoice_items.each do |inv_item|
+      item_count[inv_item.item_id] += inv_item.quantity
+    end
+    max_count = item_count.values.max
+    max_item_ids = []
+    item_count.each do |item_id, quantity|
+      max_item_ids << item_id if item_count[item_id] == max_count
+    end
+    max_items = max_item_ids.map {|max_id| se.items.find_by_id(max_id)}
+    max_items.sort_by {|item| item.id}
+  end
+
+  def most_recently_bought_items(customer_id)
+    customer = se.customers.find_by_id(customer_id)
+    sorted_invoices = customer.fully_paid_invoices.sort_by {|invoice| invoice.created_at }
+    recent_invoices = sorted_invoices.select do |invoice|
+      invoice.created_at == sorted_invoices[-1].created_at
+    end
+    #binding.pry
+    recent_invoices.flat_map do |invoice|
+      invoice.items
+    end
+  end
+
   def customers_with_unpaid_invoices
     unpaid_invoices = invoices.find_all do |invoice|
       !invoice.is_paid_in_full?

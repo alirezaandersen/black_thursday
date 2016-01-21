@@ -1,6 +1,6 @@
 class Customer
 
-  attr_reader :id, :first_name, :last_name, :created_at, :updated_at, :merchants
+  attr_reader :id, :first_name, :last_name, :created_at, :updated_at, :merchants, :invoices
 
   def initialize(args)
     @id = args[:id].to_i
@@ -13,5 +13,18 @@ class Customer
   def set_merchants(merch_in)
     @merchants = merch_in
   end
-  
+
+  def set_invoices(invoices_in)
+    @invoices = invoices_in
+  end
+
+  def invoice_items
+    fully_paid_invoices.flat_map do|invoice|
+      invoice.invoice_items
+    end
+  end
+
+  def fully_paid_invoices
+    invoices.select {|invoice| invoice.is_paid_in_full?}
+  end
 end
