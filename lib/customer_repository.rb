@@ -4,7 +4,6 @@ class CustomerRepository
 
   attr_reader :customers
 
-
   def initialize
     @customers = []
   end
@@ -23,8 +22,8 @@ class CustomerRepository
     end
   end
 
-  def load_customers(custs)
-    custs.each do |customer|
+  def load_repo_items(custs_in)
+    custs_in.each do |customer|
       customers << customer
     end
   end

@@ -24,7 +24,7 @@ class InvoiceItemRepository
     end
   end
 
-  def load_invoice_items(invoice_items_in)
+  def load_repo_items(invoice_items_in)
     invoice_items_in.each do |invoice_item|
       invoice_items << invoice_item
     end

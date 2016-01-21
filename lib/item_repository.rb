@@ -1,6 +1,7 @@
 require_relative 'item'
 require 'time'
 require 'bigdecimal'
+
 class ItemRepository
 
   attr_reader :items
@@ -23,7 +24,7 @@ class ItemRepository
       end
   end
 
-  def load_items(items_in)
+  def load_repo_items(items_in)
     items_in.each do |item|
       items << item
     end

@@ -35,7 +35,7 @@ class CustomerRepositoryTest < Minitest::Test
     :updated_at => u_time
     })
     customer = CustomerRepository.new
-    customer.load_customers([custom1, custom2, custom3])
+    customer.load_repo_items([custom1, custom2, custom3])
 
     assert_equal [custom1, custom2, custom3], customer.all
   end
@@ -64,7 +64,7 @@ class CustomerRepositoryTest < Minitest::Test
     :updated_at => u_time
     })
     customer = CustomerRepository.new
-    customer.load_customers([custom1, custom2, custom3])
+    customer.load_repo_items([custom1, custom2, custom3])
 
     assert_equal ([custom1, custom2, custom3]), customer.find_all_by_first_name("Ali")
     assert_empty customer.find_all_by_first_name("Troll")
@@ -93,7 +93,7 @@ class CustomerRepositoryTest < Minitest::Test
     :updated_at => u_time
     })
     customer = CustomerRepository.new
-    customer.load_customers([custom1, custom2, custom3])
+    customer.load_repo_items([custom1, custom2, custom3])
 
     assert_equal [custom1, custom2,custom3], customer.find_all_by_last_name("Andersen")
     assert_empty customer.find_all_by_last_name("Foucheaux")
@@ -122,7 +122,7 @@ class CustomerRepositoryTest < Minitest::Test
     :updated_at => u_time
     })
     customer = CustomerRepository.new
-    customer.load_customers([custom1, custom2, custom3])
+    customer.load_repo_items([custom1, custom2, custom3])
 
     assert_equal custom3, customer.find_by_id(6)
     assert_nil customer.find_by_id(21)

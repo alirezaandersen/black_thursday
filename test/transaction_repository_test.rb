@@ -44,7 +44,7 @@ class TransactionRepositoryTest < Minitest::Test
     :updated_at => u_time
     })
     trans = TransactionRepository.new
-    trans.load_transactions([trans1, trans2, trans3])
+    trans.load_repo_items([trans1, trans2, trans3])
 
     assert_equal [trans2, trans3], trans.find_all_by_invoice_id(8)
   end
@@ -79,7 +79,7 @@ class TransactionRepositoryTest < Minitest::Test
     :updated_at => u_time
     })
     trans = TransactionRepository.new
-    trans.load_transactions([trans1, trans2, trans3])
+    trans.load_repo_items([trans1, trans2, trans3])
 
     assert_equal [trans1,trans2], trans.find_all_by_result("success")
   end
@@ -114,7 +114,7 @@ class TransactionRepositoryTest < Minitest::Test
     :updated_at => u_time
     })
     trans = TransactionRepository.new
-    trans.load_transactions([trans1, trans2, trans3])
+    trans.load_repo_items([trans1, trans2, trans3])
 
     assert_equal [trans2,trans3], trans.find_all_by_credit_card_number("5252424242424242")
   end
@@ -149,7 +149,7 @@ class TransactionRepositoryTest < Minitest::Test
     :updated_at => u_time
     })
     trans = TransactionRepository.new
-    trans.load_transactions([trans1, trans2, trans3])
+    trans.load_repo_items([trans1, trans2, trans3])
 
     assert_empty trans.find_all_by_credit_card_number("5254311244242424242")
   end

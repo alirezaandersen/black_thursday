@@ -9,7 +9,7 @@ class SmallMerchantRepositoryTest < Minitest::Test
 
   def test_can_load_a_single_item
     mr = MerchantRepository.new
-    mr.load_merchants([Merchant.new({:name => "Ali's glitter taphouse",
+    mr.load_repo_items([Merchant.new({:name => "Ali's glitter taphouse",
       :id => 356})])
     assert_equal 1, mr.all.length
     assert_equal "Ali's glitter taphouse", mr.all[0].name
@@ -17,7 +17,7 @@ class SmallMerchantRepositoryTest < Minitest::Test
 
   def test_all_returns_multiple_items
     mr = MerchantRepository.new
-    mr.load_merchants([Merchant.new({:name => "Ali's glitter taphouse",
+    mr.load_repo_items([Merchant.new({:name => "Ali's glitter taphouse",
       :id => 356}), Merchant.new({:name => "Erinna's dog spoiling services", :id => 763}), Merchant.new({:name => "Horacio's Pizzicatos", :id => 80})])
     assert_equal 3, mr.all.length
     assert_equal "Erinna's dog spoiling services", mr.all[1].name

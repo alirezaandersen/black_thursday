@@ -18,7 +18,7 @@ class InvoiceRepositoryTest < Minitest::Test
     :updated_at  => Time.now,
     })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv])
+    invr.load_repo_items([inv])
     assert_equal 1, invr.all.length
     assert_equal 6, invr.all[0].id
   end
@@ -49,7 +49,7 @@ class InvoiceRepositoryTest < Minitest::Test
     :updated_at  => Time.now,
     })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2, inv3])
+    invr.load_repo_items([inv1, inv2, inv3])
     assert_equal 3, invr.all.length
     assert_equal [inv1, inv2, inv3], invr.all
     assert_equal 61, invr.all[0].id
@@ -75,7 +75,7 @@ class InvoiceRepositoryTest < Minitest::Test
     :updated_at  => Time.now,
     })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2])
+    invr.load_repo_items([inv1, inv2])
 
     assert_equal 623, invr.find_by_id(623).id
     assert_equal 23, invr.find_by_id(623).customer_id
@@ -101,7 +101,7 @@ class InvoiceRepositoryTest < Minitest::Test
       :updated_at  => Time.now,
       })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2])
+    invr.load_repo_items([inv1, inv2])
     assert_equal 2, invr.all.length
     assert_nil invr.find_by_id(623)
   end
@@ -124,7 +124,7 @@ class InvoiceRepositoryTest < Minitest::Test
       :updated_at  => Time.now,
       })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2])
+    invr.load_repo_items([inv1, inv2])
     assert_equal 2, invr.all.length
     assert_equal [inv1, inv2], invr.find_all_by_customer_id(25)
   end
@@ -147,7 +147,7 @@ class InvoiceRepositoryTest < Minitest::Test
       :updated_at  => Time.now,
       })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2])
+    invr.load_repo_items([inv1, inv2])
     assert_equal 2, invr.all.length
     assert invr.find_all_by_customer_id(255).empty?
   end
@@ -170,7 +170,7 @@ class InvoiceRepositoryTest < Minitest::Test
       :updated_at  => Time.now,
       })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2])
+    invr.load_repo_items([inv1, inv2])
     assert_equal 2, invr.all.length
     assert_equal [inv2],invr.find_all_by_customer_id(252)
   end
@@ -193,7 +193,7 @@ class InvoiceRepositoryTest < Minitest::Test
       :updated_at  => Time.now,
       })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2])
+    invr.load_repo_items([inv1, inv2])
     assert_equal 2, invr.all.length
     assert_equal [inv1, inv2], invr.find_all_by_merchant_id(8888123)
   end
@@ -217,7 +217,7 @@ class InvoiceRepositoryTest < Minitest::Test
       :updated_at  => Time.now,
       })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2])
+    invr.load_repo_items([inv1, inv2])
     assert_equal 2, invr.all.length
     assert invr.find_all_by_merchant_id(255).empty?
   end
@@ -240,7 +240,7 @@ class InvoiceRepositoryTest < Minitest::Test
       :updated_at  => Time.now,
       })
     invr = InvoiceRepository.new
-    invr.load_invoices([inv1, inv2])
+    invr.load_repo_items([inv1, inv2])
     assert_equal 2, invr.all.length
     assert_equal [inv2],invr.find_all_by_merchant_id(8888123)
   end
@@ -264,7 +264,7 @@ class InvoiceRepositoryTest < Minitest::Test
         :updated_at  => Time.now,
         })
       invr = InvoiceRepository.new
-      invr.load_invoices([inv1, inv2])
+      invr.load_repo_items([inv1, inv2])
       assert_equal 2, invr.all.length
       assert_equal [inv1, inv2], invr.find_all_by_status(:pending)
     end
@@ -288,7 +288,7 @@ class InvoiceRepositoryTest < Minitest::Test
         :updated_at  => Time.now,
         })
       invr = InvoiceRepository.new
-      invr.load_invoices([inv1, inv2])
+      invr.load_repo_items([inv1, inv2])
       assert_equal 2, invr.all.length
       assert invr.find_all_by_status(:failing).empty?
     end
@@ -311,7 +311,7 @@ class InvoiceRepositoryTest < Minitest::Test
         :updated_at  => Time.now,
         })
       invr = InvoiceRepository.new
-      invr.load_invoices([inv1, inv2])
+      invr.load_repo_items([inv1, inv2])
       assert_equal 2, invr.all.length
       assert_equal [inv2],invr.find_all_by_status(:active)
     end

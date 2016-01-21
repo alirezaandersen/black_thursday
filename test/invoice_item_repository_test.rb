@@ -34,7 +34,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :updated_at  => Time.now,
     })
     inv_itm = InvoiceItemRepository.new
-    inv_itm.load_invoice_items([inv_itm1, inv_itm2])
+    inv_itm.load_repo_items([inv_itm1, inv_itm2])
 
     assert_equal 601, inv_itm.find_by_id(601).id
   end
@@ -65,7 +65,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :updated_at  => Time.now,
     })
     inv_itm = InvoiceItemRepository.new
-    inv_itm.load_invoice_items([inv_itm1, inv_itm2, inv_itm3])
+    inv_itm.load_repo_items([inv_itm1, inv_itm2, inv_itm3])
 
     assert_equal [inv_itm2, inv_itm3], inv_itm.find_all_by_item_id(102)
   end
@@ -96,7 +96,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :updated_at  => Time.now,
     })
     inv_itm = InvoiceItemRepository.new
-    inv_itm.load_invoice_items([inv_itm1, inv_itm2, inv_itm3])
+    inv_itm.load_repo_items([inv_itm1, inv_itm2, inv_itm3])
 
     assert_equal [inv_itm1, inv_itm3], inv_itm.find_all_by_invoice_id(203)
   end
@@ -119,7 +119,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :updated_at  => Time.now,
     })
     inv_itm = InvoiceItemRepository.new
-    inv_itm.load_invoice_items([inv_itm1, inv_itm2])
+    inv_itm.load_repo_items([inv_itm1, inv_itm2])
 
     assert inv_itm.find_all_by_item_id(123).empty?
   end
@@ -142,7 +142,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     :updated_at  => Time.now,
     })
     inv_itm = InvoiceItemRepository.new
-    inv_itm.load_invoice_items([inv_itm1, inv_itm2])
+    inv_itm.load_repo_items([inv_itm1, inv_itm2])
 
     assert inv_itm.find_all_by_invoice_id(213).empty?
   end
