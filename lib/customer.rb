@@ -27,4 +27,14 @@ class Customer
     fully_paid_invoices.reduce(0) {|sum, invoice| sum + invoice.total }
   end
 
+  def most_recent_invoices
+    recent_date = fully_paid_invoices.max_by {|invoice| invoice.created_at }.created_at
+    fully_paid_invoices.select {|invoice| invoice.created_at == recent_date}
+  end
+
+  def most_recently_bought_items
+    most_recent_invoices.flat_map { |invoice| invoice.items }.uniq
+  end
+
+  
 end

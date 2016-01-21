@@ -160,11 +160,7 @@ class SalesAnalyst
 
   def most_recently_bought_items(customer_id)
     customer = se.customers.find_by_id(customer_id)
-    sorted_invoices = customer.fully_paid_invoices.sort_by {|invoice| invoice.created_at }
-    recent_invoices = sorted_invoices.select do |invoice|
-      invoice.created_at == sorted_invoices[-1].created_at
-    end
-    recent_invoices.flat_map { |invoice| invoice.items }.uniq
+    customer.most_recently_bought_items
   end
 
   def customers_with_unpaid_invoices
