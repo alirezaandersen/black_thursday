@@ -23,25 +23,23 @@ class InvoiceRepository
   end
 
   def load_invoices(invoices_in)
-    invoices_in.each do |invoice|
-      invoices << invoice
-    end
+    invoices_in.each { |invoice| invoices << invoice }
   end
 
   def find_by_id(id_number)
-    invoices.find { |invoice| invoice.id == id_number}
+    invoices.find { |invoice| invoice.id == id_number }
   end
 
   def find_all_by_customer_id(cust_id)
-    invoices.find_all { |invoice| invoice.customer_id == cust_id}
+    invoices.find_all { |invoice| invoice.customer_id == cust_id }
   end
 
   def find_all_by_merchant_id(merch_id)
-    invoices.find_all { |invoice| invoice.merchant_id == merch_id}
+    invoices.find_all { |invoice| invoice.merchant_id == merch_id }
   end
 
   def find_all_by_status(status)
-    invoices.find_all { |invoice| invoice.status == status}
+    invoices.find_all { |invoice| invoice.status == status }
   end
 
   def all

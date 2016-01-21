@@ -24,9 +24,7 @@ class CustomerRepository
   end
 
   def load_customers(custs)
-    custs.each do |customer|
-      customers << customer
-    end
+    custs.each { |customer| customers << customer }
   end
 
   def all
@@ -38,15 +36,13 @@ class CustomerRepository
   end
 
   def find_all_by_first_name(first_name)
-    customers.find_all do |customer|
-      customer.first_name.downcase.include?(first_name.downcase)
-    end
+    customers.find_all { |customer|
+      customer.first_name.downcase.include?(first_name.downcase) }
   end
 
   def find_all_by_last_name(last_name)
-    customers.find_all do |customer|
-      customer.last_name.downcase.include?(last_name.downcase)
-    end
+    customers.find_all { |customer|
+      customer.last_name.downcase.include?(last_name.downcase) }
   end
 
   def inspect

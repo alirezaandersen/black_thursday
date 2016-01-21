@@ -19,12 +19,10 @@ class Customer
   end
 
   def invoice_items
-    fully_paid_invoices.flat_map do|invoice|
-      invoice.invoice_items
-    end
+    fully_paid_invoices.flat_map { |invoice| invoice.invoice_items }
   end
 
   def fully_paid_invoices
-    invoices.select {|invoice| invoice.is_paid_in_full?}
+    invoices.select {|invoice| invoice.is_paid_in_full? }
   end
 end
