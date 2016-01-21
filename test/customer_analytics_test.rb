@@ -20,6 +20,58 @@ class CustomerAnalyticsTest < Minitest::Test
     inv
   end
 
+  def test_customer_can_get_invoice_totals
+    c1 = Customer.new({
+    :id => 987,
+    :first_name => "Erinna",
+    :last_name => "Chen",
+    :created_at => Time.new,
+    :updated_at => Time.now
+    })
+
+    inv1 = Invoice.new({
+    :id          => 1,
+    :customer_id => 987,
+    :merchant_id => 356,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv1.stubs(:is_paid_in_full?).returns(true)
+    inv2 = Invoice.new({
+    :id          => 2,
+    :customer_id => 987,
+    :merchant_id => 743,
+    :status      => "pending",
+    :created_at  => Time.new,
+    :updated_at  => Time.now,
+    })
+    inv2.stubs(:is_paid_in_full?).returns(true)
+
+    inv_item1 = InvoiceItem.new({
+    :id          => 998,
+    :item_id     => 25,
+    :invoice_id  => 1,
+    :quantity    => 3,
+    :unit_price  => BigDecimal.new(2000,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    inv_item2 = InvoiceItem.new({
+    :id          => 991,
+    :item_id     => 37,
+    :invoice_id  => 2,
+    :quantity    => 4,
+    :unit_price  => BigDecimal.new(1135,4),
+    :created_at => Time.new,
+    :updated_at => Time.now })
+
+    args={customers: [c1], invoices: [inv1, inv2], invoice_items: [inv_item1, inv_item2]}
+    se = SalesEngine.from_data(args)
+    sa = SalesAnalyst.new(se)
+    assert_equal 105.40, c1.invoice_total
+  end
+
   def test_get_the_top_buyers
     c1 = Customer.new({
     :id => 987,
@@ -117,7 +169,6 @@ class CustomerAnalyticsTest < Minitest::Test
     args={customers: [c1], invoices: [inv1, inv2], invoice_items: [inv_item1, inv_item2, inv_item3], merchants: [m1,m2]}
     se = SalesEngine.from_data(args)
     sa = SalesAnalyst.new(se)
-
     assert_equal m1, sa.top_merchant_for_customer(21)
   end
 
@@ -672,7 +723,7 @@ class CustomerAnalyticsTest < Minitest::Test
     args={customers: [c1,c2], invoices: [inv1, inv2, inv3, inv4]}
     se = SalesEngine.from_data(args)
     sa = SalesAnalyst.new(se)
-    assert_equal [c2,c1], sa.one_time_buyers
+    assert_equal [c1, c2], sa.one_time_buyers
   end
 
   def test_can_find_one_time_buyers_items

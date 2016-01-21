@@ -23,4 +23,8 @@ class Customer
     invoices.reject {|invoice| invoice.is_paid_in_full? }
   end
 
+  def invoice_total
+    fully_paid_invoices.reduce(0) {|sum, invoice| sum + invoice.total }
+  end
+
 end

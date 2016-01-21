@@ -104,24 +104,8 @@ class SalesAnalyst
   end
 
   def top_buyers(n = 20)
-    customers_invoices = customers.map do |customer|
-      se.invoices.find_all_by_customer_id(customer.id)
-    end
-
-    invoice_totals = customers_invoices.map do |invoice_list|
-      invoice_list.reduce(0) do |sum, inv|
-        if inv.is_paid_in_full?
-          sum+inv.total
-        else
-          sum+0
-        end
-      end
-    end
-    custs_with_it = customers.zip(invoice_totals)
-    custs_with_it.sort_by do |cust, tot|
-      tot
-    end.map do |cust,tot|
-      cust
+    customers.sort_by do |customer|
+      customer.invoice_total
     end[-1*n..-1].reverse
   end
 
@@ -146,22 +130,13 @@ class SalesAnalyst
   end
 
   def one_time_buyers
-    cust_ids.map { |cust_id| se.customers.find_by_id(cust_id) }
-  end
-
-  def valid_invoices
-    invoices.select { |invoice|invoice.is_paid_in_full? }
-  end
-
-  def vi
-    valid_invoices.group_by { |invoice| invoice.customer_id }
-  end
-
-  def cust_ids
-    vi.keys.select { |key| vi[key].length == 1 }
+    customers.select do |customer|
+      customer.fully_paid_invoices.length == 1
+    end
   end
 
   def one_time_buyers_item_counts
+    all_invoice_items = one_time_buyers.flat_map do |customer|
       customer.invoice_items
     end
     item_counts = Hash.new(0)
@@ -189,7 +164,7 @@ class SalesAnalyst
     recent_invoices = sorted_invoices.select do |invoice|
       invoice.created_at == sorted_invoices[-1].created_at
     end
-    recent_invoices.flat_map { |invoice| invoice.items }
+    recent_invoices.flat_map { |invoice| invoice.items }.uniq
   end
 
   def customers_with_unpaid_invoices
