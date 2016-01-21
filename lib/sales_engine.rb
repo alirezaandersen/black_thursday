@@ -120,8 +120,8 @@ class SalesEngine
 
   def send_invoices_to_each_customer
     customers.all.each do |customer|
-      invoice = invoices.find_all_by_customer_id(customer.id).uniq
-      customer.set_invoices(invoice)
+      invs = invoices.find_all_by_customer_id(customer.id).uniq
+      customer.invoices = invs
     end
   end
 
@@ -178,7 +178,7 @@ class SalesEngine
       invoice_list = invoices.find_all_by_customer_id(customer.id)
       merchant_id_list = invoice_list.map { |invoice| invoice.merchant_id}
       merchant_list = merchant_id_list.map {|merchant_id| merchants.find_by_id(merchant_id)}.uniq
-      customer.set_merchants(merchant_list)
+      customer.merchants = merchant_list
     end
   end
 
