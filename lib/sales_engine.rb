@@ -22,33 +22,7 @@ class SalesEngine
     args.each do |key, value|
       se.send(key).load_data(value)
     end
-
-    if args[:items] && args[:merchants]
-      se.send_items_to_each_merchant
-      se.send_merchant_to_all_items
-    end
-    if args[:merchants] && args[:invoices]
-      se.send_invoices_to_each_merchant
-      se.send_merchants_to_invoices
-    end
-    if args[:invoice_items] && args[:invoices]
-      se.send_invoice_items_to_each_invoice
-    end
-    if args[:items] && args[:invoices]
-      se.send_items_to_each_invoice
-    end
-    if args[:transactions] && args[:invoices]
-      se.send_transactions_to_each_invoice
-      se.send_invoice_to_each_transaction
-    end
-    if args[:customers] && args[:invoices]
-      se.send_customer_to_each_invoice
-      se.send_invoices_to_each_customer
-    end
-    if args[:merchants] && args[:customers]
-      se.send_customers_to_each_merchant
-      se.send_merchants_to_each_customer
-    end
+    se.transfer_information(args)
     se
   end
 
@@ -57,34 +31,37 @@ class SalesEngine
     args.each do |key, value|
       se.send(key).load_repo_items(value)
     end
+    se.transfer_information(args)
+    se
+  end
 
+  def transfer_information(args)
     if args[:items] && args[:merchants]
-      se.send_items_to_each_merchant
-      se.send_merchant_to_all_items
+      send_items_to_each_merchant
+      send_merchant_to_all_items
     end
     if args[:merchants] && args[:invoices]
-      se.send_invoices_to_each_merchant
-      se.send_merchants_to_invoices
+      send_invoices_to_each_merchant
+      send_merchants_to_invoices
     end
     if args[:invoice_items] && args[:invoices]
-      se.send_invoice_items_to_each_invoice
+      send_invoice_items_to_each_invoice
     end
     if args[:items] && args[:invoices]
-      se.send_items_to_each_invoice
+      send_items_to_each_invoice
     end
     if args[:transactions] && args[:invoices]
-      se.send_transactions_to_each_invoice
-      se.send_invoice_to_each_transaction
+      send_transactions_to_each_invoice
+      send_invoice_to_each_transaction
     end
     if args[:customers] && args[:invoices]
-      se.send_customer_to_each_invoice
-      se.send_invoices_to_each_customer
+      send_customer_to_each_invoice
+      send_invoices_to_each_customer
     end
     if args[:merchants] && args[:customers]
-      se.send_customers_to_each_merchant
-      se.send_merchants_to_each_customer
+      send_customers_to_each_merchant
+      send_merchants_to_each_customer
     end
-    se
   end
 
   def send_items_to_each_merchant
