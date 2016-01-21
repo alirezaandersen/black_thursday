@@ -60,6 +60,7 @@ class SalesEngine
     se.invoices.load_invoices(args[:invoices]) if args[:invoices]
     se.invoice_items.load_invoice_items(args[:invoice_items]) if args[:invoice_items]
     se.customers.load_customers(args[:customers]) if args[:customers]
+
     if args[:items] && args[:merchants]
       se.send_items_to_each_merchant
       se.send_merchant_to_all_items
@@ -68,15 +69,23 @@ class SalesEngine
       se.send_invoices_to_each_merchant
       se.send_merchants_to_invoices
     end
+    if args[:invoice_items] && args[:invoices]
+      se.send_invoice_items_to_each_invoice
+    end
     if args[:items] && args[:invoices]
       se.send_items_to_each_invoice
     end
-    if args[:invoice_items] && args[:invoices]
-      se.send_invoice_items_to_each_invoice
+    if args[:transactions] && args[:invoices]
+      se.send_transactions_to_each_invoice
+      se.send_invoice_to_each_transaction
     end
     if args[:customers] && args[:invoices]
       se.send_customer_to_each_invoice
       se.send_invoices_to_each_customer
+    end
+    if args[:merchants] && args[:customers]
+      se.send_customers_to_each_merchant
+      se.send_merchants_to_each_customer
     end
     se
   end
@@ -84,7 +93,7 @@ class SalesEngine
   def send_items_to_each_merchant
     merchants.all.each do |merchant|
       merchandise = items.find_all_by_merchant_id(merchant.id).uniq
-      merchant.set_items(merchandise)
+      merchant.items = merchandise
     end
   end
 
