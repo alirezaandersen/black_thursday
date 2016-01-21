@@ -54,7 +54,7 @@ class CustomerAnalyticsTest < Minitest::Test
     args={items: [], customers: cust_list, invoices: inv_list}
     se = SalesEngine.from_data(args)
     sa = SalesAnalyst.new(se)
-    assert_equal [c2, c1], sa.top_buyers(2)
+    assert_equal [c2, c1], sa.one_time_cust_id(2)
   end
 
   def test_top_merchant_for_customer_if_each_invoice_has_a_unique_merchant

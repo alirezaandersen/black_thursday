@@ -177,16 +177,30 @@ end
   end
 
   def one_time_buyers
-    valid_invoices = invoices.select do |invoice|
+    cust_ids.map do |cust_id|
+      se.customers.find_by_id(cust_id)
+    end
+  end
+
+  def valid_invoices
+    invoices.select do |invoice|
       invoice.is_paid_in_full?
     end
-    vi = valid_invoices.group_by do |invoice|
+  end
+
+  def vi
+    valid_invoices.group_by do |invoice|
       invoice.customer_id
     end
+  end
 
-    cust_ids = vi.keys.select do |key|
+  def cust_ids
+    vi.keys.select do |key|
       vi[key].length == 1
     end
+  end
+
+  def one_time_cust_id
     cust_ids.map do |cust_id|
       se.customers.find_by_id(cust_id)
     end
