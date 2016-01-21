@@ -100,7 +100,7 @@ class SalesEngine
   def send_merchant_to_all_items
     items.all.each do |item|
       merchant = merchants.find_by_id(item.merchant_id)
-      item.set_merchant(merchant)
+      item.merchant = merchant
     end
   end
 
