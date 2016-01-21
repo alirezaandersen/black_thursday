@@ -20,16 +20,12 @@ class SalesAnalyst
 
   def merchants_with_low_item_count
     th=average_items_per_merchant-average_items_per_merchant_standard_deviation
-    merchants.find_all do |merchant|
-      merchant.items.length < th
-    end
+    merchants.find_all { |merchant| merchant.items.length < th }
   end
 
   def merchants_with_high_item_count
     threshold = average_items_per_merchant + average_items_per_merchant_standard_deviation
-    merchants.find_all do |merchant|
-      merchant.items.length > threshold
-    end
+    merchants.find_all { |merchant| merchant.items.length > threshold }
   end
 
   def average_item_price_for_merchant(merchant_id)
@@ -74,16 +70,14 @@ class SalesAnalyst
   def top_merchants_by_invoice_count
     threshold = average_invoices_per_merchant + 2*average_invoices_per_merchant_standard_deviation
 
-    merchants.find_all do |merchant|
-      merchant.invoices.length > threshold
-    end
+    merchants.find_all { |merchant|
+      merchant.invoices.length > threshold }
   end
 
   def bottom_merchants_by_invoice_count
     threshold = average_invoices_per_merchant - 2*average_invoices_per_merchant_standard_deviation
-    merchants.find_all do |merchant|
-      merchant.invoices.length < threshold
-    end
+    merchants.find_all { |merchant|
+      merchant.invoices.length < threshold }
   end
 
   def get_invoice_counts_by_day
@@ -110,8 +104,6 @@ class SalesAnalyst
   end
 
   def top_buyers(n = 20)
-    # calculate the total of all their invøices (minus the invalid transactions)
-    # returns the top n customers sorted by their invoice totals
     customers_invoices = customers.map do |customer|
       se.invoices.find_all_by_customer_id(customer.id)
     end
@@ -146,69 +138,63 @@ class SalesAnalyst
   end
 
   def best_invoice_by_revenue
-    invoices.max_by do |invoice|
-      invoice.total
-    end
+    invoices.max_by { |invoice| invoice.total }
   end
 
   def best_invoice_by_quantity
-    invoices.max_by do |invoice|
-      invoice.quantity
-    end
+    invoices.max_by { |invoice| invoice.quantity }
   end
 
   def one_time_buyers
-    valid_invoices = invoices.select do |invoice|
-      invoice.is_paid_in_full?
-    end
-    vi = valid_invoices.group_by do |invoice|
-      invoice.customer_id
-    end
+    cust_ids.map { |cust_id| se.customers.find_by_id(cust_id) }
+  end
 
-    cust_ids = vi.keys.select do |key|
-      vi[key].length == 1
-    end
-    cust_ids.map do |cust_id|
-      se.customers.find_by_id(cust_id)
-    end
+  def valid_invoices
+    invoices.select { |invoice|invoice.is_paid_in_full? }
+  end
+
+  def vi
+    valid_invoices.group_by { |invoice| invoice.customer_id }
+  end
+
+  def cust_ids
+    vi.keys.select { |key| vi[key].length == 1 }
   end
 
   def one_time_buyers_item
-    all_invoice_items = one_time_buyers.flat_map do |customer|
-      customer.invoice_items
+      all_invoice_items = one_time_buyers.flat_map do |customer|
+        customer.invoice_items
+      end
+      item_count = Hash.new(0)
+      all_invoice_items.each do |inv_item|
+        item_count[inv_item.item_id] += inv_item.quantity
+      end
+      max_count = item_count.values.max
+      max_item_ids = []
+      item_count.each do |item_id, quantity|
+        max_item_ids << item_id if item_count[item_id] == max_count
+      end
+      max_items = max_item_ids.map {|max_id| se.items.find_by_id(max_id)}
+      max_items.sort_by {|item| item.id}
     end
-    item_count = Hash.new(0)
-    all_invoice_items.each do |inv_item|
-      item_count[inv_item.item_id] += inv_item.quantity
-    end
-    max_count = item_count.values.max
-    max_item_ids = []
-    item_count.each do |item_id, quantity|
-      max_item_ids << item_id if item_count[item_id] == max_count
-    end
-    max_items = max_item_ids.map {|max_id| se.items.find_by_id(max_id)}
-    max_items.sort_by {|item| item.id}
-  end
 
   def most_recently_bought_items(customer_id)
+    # get customer
     customer = se.customers.find_by_id(customer_id)
+
     sorted_invoices = customer.fully_paid_invoices.sort_by {|invoice| invoice.created_at }
     recent_invoices = sorted_invoices.select do |invoice|
       invoice.created_at == sorted_invoices[-1].created_at
     end
-    #binding.pry
     recent_invoices.flat_map do |invoice|
       invoice.items
     end
   end
 
   def customers_with_unpaid_invoices
-    unpaid_invoices = invoices.find_all do |invoice|
-      !invoice.is_paid_in_full?
+    customers.select do |customer|
+      customer.unpaid_invoices.length > 0
     end
-    unpaid_invoices.map do |invoice|
-      invoice.customer
-    end.uniq
   end
 
   def invoices
@@ -225,14 +211,6 @@ class SalesAnalyst
 
   def customers
     se.customers.all
-  end
-
-  def merchants_with_pending_invoices
-    merchants.select do |merchant|
-      merchant.invoices.any? do |invoice|
-        !invoice.is_paid_in_full?
-      end
-    end
   end
 
 end

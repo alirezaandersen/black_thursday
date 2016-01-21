@@ -25,4 +25,8 @@ class Customer
   def fully_paid_invoices
     invoices.select {|invoice| invoice.is_paid_in_full? }
   end
+
+  def unpaid_invoices
+    invoices.reject {|invoice| invoice.is_paid_in_full? }
+  end
 end

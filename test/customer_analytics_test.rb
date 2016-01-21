@@ -351,7 +351,7 @@ class CustomerAnalyticsTest < Minitest::Test
     args={customers: [c1,c2], invoices: [inv1, inv2]}
     se = SalesEngine.from_data(args)
     sa = SalesAnalyst.new(se)
-    assert_equal [c2,c1], sa.customers_with_unpaid_invoices
+    assert_equal [c1,c2], sa.customers_with_unpaid_invoices
   end
 
   def test_can_find_customers_with_unpaid_invoices_customer_with_two_unpaid_invoices
