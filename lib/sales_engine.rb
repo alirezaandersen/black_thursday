@@ -54,13 +54,9 @@ class SalesEngine
 
   def self.from_data(args)
     se = SalesEngine.new
-
-    se.items.load_repo_items(args[:items]) if args[:items]
-    se.merchants.load_repo_items(args[:merchants]) if args[:merchants]
-    se.invoices.load_repo_items(args[:invoices]) if args[:invoices]
-    se.invoice_items.load_repo_items(args[:invoice_items]) if args[:invoice_items]
-    se.customers.load_repo_items(args[:customers]) if args[:customers]
-    se.transactions.load_repo_items(args[:transactions]) if args[:transactions]
+    args.each do |key, value|
+      se.send(key).load_repo_items(value)
+    end
 
     if args[:items] && args[:merchants]
       se.send_items_to_each_merchant
