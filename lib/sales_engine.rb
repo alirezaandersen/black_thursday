@@ -107,7 +107,7 @@ class SalesEngine
   def send_merchants_to_invoices
     invoices.all.each do |invoice|
       merchant = merchants.find_by_id(invoice.merchant_id)
-      invoice.set_merchant(merchant)
+      invoice.merchant = merchant
     end
   end
 
@@ -131,7 +131,7 @@ class SalesEngine
       merchandise = inv_item_list.map do |inv_item|
         items.find_by_id(inv_item.item_id)
       end
-      invoice.set_items(merchandise)
+      invoice.items = merchandise
     end
   end
 
@@ -139,14 +139,14 @@ class SalesEngine
 
     invoices.all.each do |invoice|
       merchandise = invoice_items.find_all_by_invoice_id(invoice.id).uniq
-      invoice.set_invoice_items(merchandise)
+      invoice.invoice_items = merchandise
     end
   end
 
   def send_transactions_to_each_invoice
     invoices.all.each do |invoice|
       trans = transactions.find_all_by_invoice_id(invoice.id).uniq
-      invoice.set_transactions(trans)
+      invoice.transactions = trans
     end
   end
 
@@ -160,7 +160,7 @@ class SalesEngine
   def send_customer_to_each_invoice
     invoices.all.each do |invoice|
       cust = customers.find_by_id(invoice.customer_id)
-      invoice.set_customer(cust)
+      invoice.customer = cust
     end
   end
 
