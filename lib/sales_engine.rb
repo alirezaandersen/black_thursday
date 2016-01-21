@@ -153,7 +153,7 @@ class SalesEngine
   def send_invoice_to_each_transaction
     transactions.all.each do |transaction|
       inv = invoices.find_by_id(transaction.invoice_id)
-      transaction.set_invoice(inv)
+      transaction.invoice = inv
     end
   end
 
