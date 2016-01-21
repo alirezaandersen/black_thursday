@@ -105,28 +105,14 @@ class SalesAnalyst
 
   def top_buyers(n = 20)
     customers.sort_by do |customer|
-      customer.invoice_total
-    end[-1*n..-1].reverse
+      -1*customer.invoice_total
+    end[0...n]
   end
 
   def top_merchant_for_customer(customer_id)
-    invoices = se.invoices.find_all_by_customer_id(customer_id)
-    item_counts = Hash.new(0)
-    invoices.each do |invoice|
-      item_counts[invoice.merchant_id] += invoice.quantity
-    end
-    max_merchant_id = item_counts.max_by do |key,value|
-      value
-    end[0]
+    customer = se.customers.find_by_id(customer_id)
+    max_merchant_id = customer.top_merchant_by_item_count
     se.merchants.find_by_id(max_merchant_id)
-  end
-
-  def best_invoice_by_revenue
-    invoices.max_by { |invoice| invoice.total }
-  end
-
-  def best_invoice_by_quantity
-    invoices.max_by { |invoice| invoice.quantity }
   end
 
   def one_time_buyers
@@ -149,13 +135,11 @@ class SalesAnalyst
   def one_time_buyers_item
     item_counts = one_time_buyers_item_counts
     max_count = item_counts.values.max
-    #get all item_ids with value == max_count
-    max_item_ids = []
-    item_counts.each do |item_id, quantity|
-      max_item_ids << item_id if item_counts[item_id] == max_count
+    max_item_ids = item_counts.keys.select do |item_id|
+      item_counts[item_id] == max_count
     end
-    max_items = max_item_ids.map {|max_id| se.items.find_by_id(max_id)}
-    max_items.sort_by {|item| item.id}
+    max_items = max_item_ids.map { |max_id| se.items.find_by_id(max_id) }
+    max_items.sort_by { |item| item.id }
   end
 
   def most_recently_bought_items(customer_id)
@@ -168,6 +152,15 @@ class SalesAnalyst
       customer.unpaid_invoices.length > 0
     end
   end
+
+  def best_invoice_by_revenue
+    invoices.max_by { |invoice| invoice.total }
+  end
+
+  def best_invoice_by_quantity
+    invoices.max_by { |invoice| invoice.quantity }
+  end
+
 
   def invoices
     se.invoices.all

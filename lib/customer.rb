@@ -36,5 +36,12 @@ class Customer
     most_recent_invoices.flat_map { |invoice| invoice.items }.uniq
   end
 
-  
+  def top_merchant_by_item_count
+    item_counts = Hash.new(0)
+    invoices.each do |invoice|
+      item_counts[invoice.merchant_id] += invoice.quantity
+    end
+    max_merchant_id = item_counts.key(item_counts.values.max)
+  end
+
 end
