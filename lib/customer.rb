@@ -1,6 +1,7 @@
 class Customer
 
-  attr_reader :id, :first_name, :last_name, :created_at, :updated_at, :merchants, :invoices
+  attr_reader :id, :first_name, :last_name, :created_at, :updated_at
+  attr_accessor :merchants, :invoices
 
   def initialize(args)
     @id = args[:id].to_i
@@ -8,14 +9,6 @@ class Customer
     @last_name = args[:last_name].capitalize
     @created_at = args[:created_at]
     @updated_at = args[:updated_at]
-  end
-
-  def set_merchants(merch_in)
-    @merchants = merch_in
-  end
-
-  def set_invoices(invoices_in)
-    @invoices = invoices_in
   end
 
   def invoice_items
@@ -29,4 +22,5 @@ class Customer
   def unpaid_invoices
     invoices.reject {|invoice| invoice.is_paid_in_full? }
   end
+
 end

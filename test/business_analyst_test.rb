@@ -157,7 +157,7 @@ class IterTwoSalesAnalyst < Minitest::Test
       :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
       :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")})
     end
-    inv.set_transactions(transactions)
+    inv.transactions = transactions
     refute inv.is_paid_in_full?
   end
 
@@ -181,7 +181,7 @@ class IterTwoSalesAnalyst < Minitest::Test
       :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
       :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")})
     end
-    inv.set_transactions(transactions)
+    inv.transactions = transactions
     assert inv.is_paid_in_full?
   end
 
@@ -213,7 +213,7 @@ class IterTwoSalesAnalyst < Minitest::Test
       :result => "success",
       :created_at => Time.new(2016, 01, 04, 11, 27, 39, "-07:00"),
       :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")}))
-    inv.set_transactions(transactions)
+    inv.transactions = transactions
     assert inv.is_paid_in_full?
   end
 
@@ -239,7 +239,7 @@ class IterTwoSalesAnalyst < Minitest::Test
       :updated_at => Time.new(2016, 01, 25, 05, 12, 50, "-07:00")})
     end
     inv.stubs(:is_paid_in_full?).returns(true)
-    inv.set_invoice_items(inv_items)
+    inv.invoice_items = inv_items
     assert_equal BigDecimal(83.35,4), inv.total
   end
 end

@@ -2,6 +2,8 @@ require 'test_helper'
 require 'sales_engine'
 
 class SalesEngineTest < Minitest::Test
+  se =
+
   def test_defaults_with_an_item_repository_and_a_merchant_repository
     se= SalesEngine.new
     assert_kind_of ItemRepository, se.items
@@ -77,7 +79,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_Sales_data_can_be_loaded
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -95,7 +96,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_sales_engine_establishes_relationships_for_invoices
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -112,7 +112,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_transactions_know_which_invoice_its_associated_with
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -127,7 +126,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_merchant_can_find_multiple_customers
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -143,8 +141,7 @@ class SalesEngineTest < Minitest::Test
     assert merchant.customers.all? {|customer| customer.kind_of?(Customer)}
   end
 
-  def test_customer_can_find_multiple_merchants
-    skip
+  def test_merchant_can_find_mutliple_customers
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",
@@ -160,7 +157,6 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_are_there_any_invoices_with_more_than_one_transaction
-    skip
     se = SalesEngine.from_csv({
     :items => "./data/items.csv",
     :merchants => "./data/merchants.csv",

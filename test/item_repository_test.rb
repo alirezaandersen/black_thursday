@@ -10,7 +10,7 @@ class SmallItemRepositoryTest < Minitest::Test
 
   def test_can_load_a_single_item
     ir = ItemRepository.new
-    ir.load_items([Item.new({:name => "Best item",
+    ir.load_repo_items([Item.new({:name => "Best item",
       :description => "No explanation needed",
       :unit_price => BigDecimal.new(99.73, 4),
       :created_at => Time.new,
@@ -40,7 +40,7 @@ class SmallItemRepositoryTest < Minitest::Test
       :updated_at => Time.now,
       :merchant_id => 98110,
       :id => 356})
-    ir.load_items([i1, i2])
+    ir.load_repo_items([i1, i2])
     assert_equal [i1, i2], ir.all
   end
 
@@ -58,7 +58,7 @@ class SmallItemRepositoryTest < Minitest::Test
 
   def test_can_load_multiple_items
     ir = ItemRepository.new
-    ir.load_items(create_items(5))
+    ir.load_repo_items(create_items(5))
     assert_equal 5, ir.all.length
     assert ir.all.all? {|item| item.kind_of?(Item)}
     assert_equal 15, ir.all[2].id
@@ -67,7 +67,7 @@ class SmallItemRepositoryTest < Minitest::Test
 
   def test_can_find_by_id
     ir = ItemRepository.new
-    ir.load_items(create_items(5))
+    ir.load_repo_items(create_items(5))
     item = ir.find_by_id(16)
     assert_equal "Item \#3", item.name
     assert_equal 2303, item.merchant_id

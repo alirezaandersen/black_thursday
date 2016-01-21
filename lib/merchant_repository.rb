@@ -15,7 +15,7 @@ class MerchantRepository
     end
   end
 
-  def load_merchants(merchants_in)
+  def load_repo_items(merchants_in)
     merchants_in.each { |merchant| merchants << merchant }
   end
 

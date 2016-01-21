@@ -22,7 +22,7 @@ class InvoiceRepository
       end
   end
 
-  def load_invoices(invoices_in)
+  def load_repo_items(invoices_in)
     invoices_in.each { |invoice| invoices << invoice }
   end
 

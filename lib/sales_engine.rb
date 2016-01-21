@@ -17,159 +17,129 @@ class SalesEngine
     @invoice_items = InvoiceItemRepository.new
   end
 
+  def relationships
+    [[:items, :merchants], [:merchants, :items],
+     [:merchants, :invoices], [:invoices, :merchants],
+     [:merchants, :customers], [:customers, :merchants],
+     [:customers, :invoices], [:invoices, :customers],
+     [:transactions, :invoices], [:invoices, :transactions],
+     [:invoice_items, :invoices], [:items, :invoices]]
+  end
+
   def self.from_csv(args)
     se = SalesEngine.new
     args.each do |key, value|
       se.send(key).load_data(value)
     end
-
-    if args[:items] && args[:merchants]
-      se.send_items_to_each_merchant
-      se.send_merchant_to_all_items
-    end
-    if args[:merchants] && args[:invoices]
-      se.send_invoices_to_each_merchant
-      se.send_merchants_to_invoices
-    end
-    if args[:invoice_items] && args[:invoices]
-      se.send_invoice_items_to_each_invoice
-    end
-    if args[:items] && args[:invoices]
-      se.send_items_to_each_invoice
-    end
-    if args[:transactions] && args[:invoices]
-      se.send_transactions_to_each_invoice
-      se.send_invoice_to_each_transaction
-    end
-    if args[:customers] && args[:invoices]
-      se.send_customer_to_each_invoice
-      se.send_invoices_to_each_customer
-    end
-    if args[:merchants] && args[:customers]
-      se.send_customers_to_each_merchant
-      se.send_merchants_to_each_customer
-    end
+    se.transfer_information(args)
     se
   end
 
   def self.from_data(args)
     se = SalesEngine.new
-
-    se.items.load_items(args[:items]) if args[:items]
-    se.merchants.load_merchants(args[:merchants]) if args[:merchants]
-    se.invoices.load_invoices(args[:invoices]) if args[:invoices]
-    se.invoice_items.load_invoice_items(args[:invoice_items]) if args[:invoice_items]
-    se.customers.load_customers(args[:customers]) if args[:customers]
-    if args[:items] && args[:merchants]
-      se.send_items_to_each_merchant
-      se.send_merchant_to_all_items
+    args.each do |key, value|
+      se.send(key).load_repo_items(value)
     end
-    if args[:merchants] && args[:invoices]
-      se.send_invoices_to_each_merchant
-      se.send_merchants_to_invoices
-    end
-    if args[:items] && args[:invoices]
-      se.send_items_to_each_invoice
-    end
-    if args[:invoice_items] && args[:invoices]
-      se.send_invoice_items_to_each_invoice
-    end
-    if args[:customers] && args[:invoices]
-      se.send_customer_to_each_invoice
-      se.send_invoices_to_each_customer
-    end
+    se.transfer_information(args)
     se
   end
 
-  def send_items_to_each_merchant
-    merchants.all.each do |merchant|
-      merchandise = items.find_all_by_merchant_id(merchant.id).uniq
-      merchant.set_items(merchandise)
+  def transfer_information(args)
+    relationships.each do |to_send, receiver|
+      send_method = "send_#{to_send}_to_#{receiver}".to_sym
+      send(send_method) if args[to_send] && args[receiver]
     end
   end
 
-  def send_merchant_to_all_items
+  def send_items_to_merchants
+    merchants.all.each do |merchant|
+      merchandise = items.find_all_by_merchant_id(merchant.id).uniq
+      merchant.items = merchandise
+    end
+  end
+
+  def send_merchants_to_items
     items.all.each do |item|
       merchant = merchants.find_by_id(item.merchant_id)
-      item.set_merchant(merchant)
+      item.merchant = merchant
     end
   end
 
   def send_merchants_to_invoices
     invoices.all.each do |invoice|
       merchant = merchants.find_by_id(invoice.merchant_id)
-      invoice.set_merchant(merchant)
+      invoice.merchant = merchant
     end
   end
 
-  def send_invoices_to_each_merchant
+  def send_invoices_to_merchants
     merchants.all.each do |merchant|
-      invoice = invoices.find_all_by_merchant_id(merchant.id).uniq
-      merchant.set_invoices(invoice)
+      invs = invoices.find_all_by_merchant_id(merchant.id).uniq
+      merchant.invoices = invs
     end
   end
 
-  def send_invoices_to_each_customer
+  def send_invoices_to_customers
     customers.all.each do |customer|
-      invoice = invoices.find_all_by_customer_id(customer.id).uniq
-      customer.set_invoices(invoice)
+      invs = invoices.find_all_by_customer_id(customer.id).uniq
+      customer.invoices = invs
     end
   end
 
-  def send_items_to_each_invoice
+  def send_items_to_invoices
     invoices.all.each do |invoice|
-      inv_item_list = invoice_items.find_all_by_invoice_id(invoice.id)
-      merchandise = inv_item_list.map do |inv_item|
+      inv_items = invoice_items.find_all_by_invoice_id(invoice.id)
+      invoice.items = inv_items.map do |inv_item|
         items.find_by_id(inv_item.item_id)
       end
-      invoice.set_items(merchandise)
     end
   end
 
-  def send_invoice_items_to_each_invoice
-
+  def send_invoice_items_to_invoices
     invoices.all.each do |invoice|
-      merchandise = invoice_items.find_all_by_invoice_id(invoice.id).uniq
-      invoice.set_invoice_items(merchandise)
+      inv_items = invoice_items.find_all_by_invoice_id(invoice.id).uniq
+      invoice.invoice_items = inv_items
     end
   end
 
-  def send_transactions_to_each_invoice
+  def send_transactions_to_invoices
     invoices.all.each do |invoice|
       trans = transactions.find_all_by_invoice_id(invoice.id).uniq
-      invoice.set_transactions(trans)
+      invoice.transactions = trans
     end
   end
 
-  def send_invoice_to_each_transaction
+  def send_invoices_to_transactions
     transactions.all.each do |transaction|
       inv = invoices.find_by_id(transaction.invoice_id)
-      transaction.set_invoice(inv)
+      transaction.invoice = inv
     end
   end
 
-  def send_customer_to_each_invoice
+  def send_customers_to_invoices
     invoices.all.each do |invoice|
       cust = customers.find_by_id(invoice.customer_id)
-      invoice.set_customer(cust)
+      invoice.customer = cust
     end
   end
 
-  def send_customers_to_each_merchant
+  def send_customers_to_merchants
     merchants.all.each do |merchant|
-      merch_inv_list = invoices.find_all_by_merchant_id(merchant.id)
-      customer_list_by_id = merch_inv_list.map {|inv| inv.customer_id}
-      cust_list = customer_list_by_id.map {|cust_id| customers.find_by_id(cust_id)}.uniq
-      merchant.set_customers(cust_list)
+      invs = invoices.find_all_by_merchant_id(merchant.id)
+      cust_ids = invs.map {|inv| inv.customer_id}
+      merchant.customers = cust_ids.map do |cust_id|
+        customers.find_by_id(cust_id)
+      end.uniq
     end
   end
 
-  def send_merchants_to_each_customer
+  def send_merchants_to_customers
     customers.all.each do |customer|
-      invoice_list = invoices.find_all_by_customer_id(customer.id)
-      merchant_id_list = invoice_list.map { |invoice| invoice.merchant_id}
-      merchant_list = merchant_id_list.map {|merchant_id| merchants.find_by_id(merchant_id)}.uniq
-      customer.set_merchants(merchant_list)
+      invs = invoices.find_all_by_customer_id(customer.id)
+      merchant_ids = invs.map { |invoice| invoice.merchant_id}
+      customer.merchants = merchant_ids.map do |merchant_id|
+         merchants.find_by_id(merchant_id)
+      end.uniq
     end
   end
 

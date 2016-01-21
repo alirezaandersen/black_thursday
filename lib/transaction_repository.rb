@@ -1,12 +1,8 @@
 require 'transaction'
-require 'invoice_items'
-
 
 class TransactionRepository
 
   attr_reader :transactions
-
-
   def initialize
     @transactions = []
   end
@@ -27,9 +23,9 @@ class TransactionRepository
     end
   end
 
-  def load_transactions(trans)
-    trans.each do |invoice|
-      transactions << invoice
+  def load_repo_items(trans_in)
+    trans_in.each do |transaction|
+      transactions << transaction
     end
   end
 
