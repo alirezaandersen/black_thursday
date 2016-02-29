@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/jwashke/black_thursday.png?label=ready&title=Ready)](https://waffle.io/jwashke/black_thursday)
 [![Stories in Ready](https://badge.waffle.io/alirezaandersen/black_thursday.png?label=ready&title=Ready)](https://waffle.io/alirezaandersen/black_thursday)
 ## Black Thursday
 
